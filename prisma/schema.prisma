@@ -7,11 +7,26 @@ datasource db {
 }
 
 model Hospital {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id @default(autoincrement()) // 네가 지금 Int 쓰는 걸로 보임
   name      String
   address   String
   phone     String?
   website   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  requests  Request[]
+}
+
+model Request {
+  id          Int      @id @default(autoincrement())
+  hospitalId  Int
+  hospital    Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+
+  type        String   // "inquiry" | "reservation" (일단 String으로)
+  name        String
+  phone       String
+  message     String?
+  preferredAt DateTime?
+  createdAt   DateTime @default(now())
 }
