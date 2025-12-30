@@ -111,20 +111,42 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
         <label className="block text-sm font-medium text-gray-700 mb-1">
           평점 *
         </label>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               type="button"
               onClick={() => setForm({ ...form, rating: star })}
-              className={`text-2xl ${
+              onMouseEnter={(e) => {
+                const stars = e.currentTarget.parentElement?.querySelectorAll("button");
+                stars?.forEach((btn, idx) => {
+                  if (idx < star) {
+                    btn.classList.add("text-yellow-400");
+                    btn.classList.remove("text-gray-300");
+                  }
+                });
+              }}
+              onMouseLeave={(e) => {
+                const stars = e.currentTarget.parentElement?.querySelectorAll("button");
+                stars?.forEach((btn, idx) => {
+                  if (idx < form.rating) {
+                    btn.classList.add("text-yellow-400");
+                    btn.classList.remove("text-gray-300");
+                  } else {
+                    btn.classList.add("text-gray-300");
+                    btn.classList.remove("text-yellow-400");
+                  }
+                });
+              }}
+              className={`text-2xl transition-colors ${
                 star <= form.rating ? "text-yellow-400" : "text-gray-300"
-              } hover:text-yellow-400 transition-colors`}
+              } hover:scale-110 cursor-pointer`}
+              aria-label={`${star}점`}
             >
               ⭐
             </button>
           ))}
-          <span className="ml-2 text-sm text-gray-600">{form.rating}점</span>
+          <span className="ml-3 text-sm font-medium text-gray-700">{form.rating}점</span>
         </div>
       </div>
 

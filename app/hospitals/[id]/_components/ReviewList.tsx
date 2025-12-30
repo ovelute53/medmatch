@@ -23,6 +23,7 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
   useEffect(() => {
     loadReviews();
@@ -45,6 +46,38 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
       setError(error.message || "리뷰를 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleDelete(reviewId: number) {
+    if (!confirm("정말 이 리뷰를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    setDeletingId(reviewId);
+    try {
+      const res = await fetch(`/api/hospitals/${hospitalId}/reviews/${reviewId}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "리뷰 삭제에 실패했습니다.");
+        return;
+      }
+
+      // 리뷰 목록에서 제거
+      setReviews((prev) => prev.filter((r) => r.id !== reviewId));
+      // 페이지 새로고침으로 평점 업데이트
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } catch (error) {
+      console.error("리뷰 삭제 오류:", error);
+      alert("리뷰 삭제 중 오류가 발생했습니다.");
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -118,13 +151,23 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
                 <h4 className="font-medium text-gray-900 mb-1">{review.title}</h4>
               )}
             </div>
-            <span className="text-xs text-gray-500">
-              {new Date(review.createdAt).toLocaleDateString("ko-KR", {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
-            </span>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-500">
+                {new Date(review.createdAt).toLocaleDateString("ko-KR", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+              <button
+                onClick={() => handleDelete(review.id)}
+                disabled={deletingId === review.id}
+                className="text-xs text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+                title="리뷰 삭제"
+              >
+                {deletingId === review.id ? "삭제 중..." : "🗑️ 삭제"}
+              </button>
+            </div>
           </div>
           <p className="text-gray-700 whitespace-pre-wrap">{review.content}</p>
         </div>
