@@ -68,6 +68,14 @@ export async function POST(
     }
 
     // 리뷰 생성
+    if (!prisma.review) {
+      console.error("Prisma Client에 review 모델이 없습니다. 개발 서버를 재시작해주세요.");
+      return NextResponse.json(
+        { error: "서버 설정 오류가 발생했습니다. 잠시 후 다시 시도해주세요." },
+        { status: 500 }
+      );
+    }
+
     const review = await prisma.review.create({
       data: {
         hospitalId,
