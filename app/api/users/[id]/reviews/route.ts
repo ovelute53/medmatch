@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
@@ -8,16 +6,11 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions);
     const { id } = await params;
     const userId = Number(id);
 
-    if (!session || session.user?.id !== id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     if (!Number.isFinite(userId)) {
-      return NextResponse.json({ error: "Invalid user id" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
     }
 
     const reviews = await prisma.review.findMany({
@@ -35,9 +28,9 @@ export async function GET(
 
     return NextResponse.json({ reviews });
   } catch (error: any) {
-    console.error("리뷰 조회 오류:", error);
+    console.error("사용자 리뷰 조회 오류:", error);
     return NextResponse.json(
-      { error: error.message || "리뷰 조회에 실패했습니다." },
+      { error: error.message || "사용자 리뷰를 불러오는데 실패했습니다." },
       { status: 500 }
     );
   }

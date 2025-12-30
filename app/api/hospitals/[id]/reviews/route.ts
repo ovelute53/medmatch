@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
@@ -94,9 +92,8 @@ export async function POST(
       return NextResponse.json({ error: "Invalid hospital id" }, { status: 400 });
     }
 
-    const session = await getServerSession(authOptions);
     const body = await req.json();
-    const { name, email, rating, title, content, language } = body;
+    const { name, email, rating, title, content, language, userId } = body;
 
     // 유효성 검사
     if (!name || !rating || !content) {
@@ -137,9 +134,9 @@ export async function POST(
     const review = await prisma.review.create({
       data: {
         hospitalId,
-        userId: session?.user?.id ? Number(session.user.id) : undefined,
-        name: session?.user?.name || name,
-        email: session?.user?.email || email || undefined,
+        userId: userId ? Number(userId) : undefined,
+        name,
+        email: email || undefined,
         rating: roundedRating,
         title: title || undefined,
         content,
