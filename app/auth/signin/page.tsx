@@ -211,7 +211,6 @@ export default function SignInPage() {
             </button>
           </form>
         </div>
-        </div>
       </div>
     </div>
   );
