@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import HospitalRequestForm from "./_components/HospitalRequestForm";
 import ReviewFormWrapper from "./_components/ReviewFormWrapper";
+import FavoriteButton from "./_components/FavoriteButton";
+import RecentHospitalTracker from "./_components/RecentHospitalTracker";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +34,9 @@ export default async function HospitalDetail({
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* 최근 본 병원 추적 */}
+      <RecentHospitalTracker hospital={hospital} />
+      
       {/* 헤더 */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -62,7 +67,7 @@ export default async function HospitalDetail({
             {/* 병원 기본 정보 */}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-start justify-between mb-4">
-                <div>
+                <div className="flex-1">
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     {hospital.name}
                   </h1>
@@ -70,19 +75,22 @@ export default async function HospitalDetail({
                     <p className="text-lg text-gray-600">{hospital.nameEn}</p>
                   )}
                 </div>
-                {hospital.rating !== null && hospital.rating > 0 && (
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl">⭐</span>
-                    <div>
-                      <div className="text-xl font-bold text-gray-900">
-                        {hospital.rating.toFixed(1)}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        리뷰 {hospital.reviewCount}개
+                <div className="flex items-center gap-4">
+                  <FavoriteButton hospitalId={hospital.id} />
+                  {hospital.rating !== null && hospital.rating > 0 && (
+                    <div className="flex items-center space-x-2">
+                      <span className="text-2xl">⭐</span>
+                      <div>
+                        <div className="text-xl font-bold text-gray-900">
+                          {hospital.rating.toFixed(1)}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          리뷰 {hospital.reviewCount}개
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
 
               <div className="space-y-3 border-t pt-4">
