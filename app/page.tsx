@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import LoadingSpinner from "./_components/LoadingSpinner";
+import ErrorMessage from "./_components/ErrorMessage";
+import EmptyState from "./_components/EmptyState";
 
 interface Department {
   id: number;
@@ -34,6 +37,7 @@ export default function HomePage() {
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
   const [selectedCity, setSelectedCity] = useState<string>("");
@@ -50,17 +54,22 @@ export default function HomePage() {
   async function loadDepartments() {
     try {
       const res = await fetch("/api/departments");
+      if (!res.ok) {
+        throw new Error("진료과를 불러오는데 실패했습니다.");
+      }
       const data = await res.json();
       if (data.departments) {
         setDepartments(data.departments);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("진료과 로드 실패:", error);
+      setError(error.message || "데이터를 불러오는데 실패했습니다.");
     }
   }
 
   async function loadHospitals() {
     setLoading(true);
+    setError(null);
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append("search", searchQuery);
@@ -68,12 +77,18 @@ export default function HomePage() {
       if (selectedCity) params.append("city", selectedCity);
 
       const res = await fetch(`/api/hospitals?${params.toString()}`);
+      if (!res.ok) {
+        throw new Error("병원을 불러오는데 실패했습니다.");
+      }
       const data = await res.json();
       if (data.hospitals) {
         setHospitals(data.hospitals);
+      } else if (data.error) {
+        throw new Error(data.error);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("병원 로드 실패:", error);
+      setError(error.message || "병원을 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
     }
@@ -197,20 +212,24 @@ export default function HomePage() {
           </div>
 
           {loading ? (
-            <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              <p className="mt-4 text-gray-600">로딩 중...</p>
-            </div>
+            <LoadingSpinner size="lg" text="병원 목록을 불러오는 중..." />
+          ) : error ? (
+            <ErrorMessage
+              message={error}
+              onRetry={() => {
+                loadHospitals();
+              }}
+            />
           ) : hospitals.length === 0 ? (
-            <div className="bg-white rounded-lg shadow p-12 text-center">
-              <p className="text-gray-500 text-lg">등록된 병원이 없습니다.</p>
-              <Link
-                href="/admin/hospitals/new"
-                className="mt-4 inline-block text-blue-600 hover:text-blue-800"
-              >
-                첫 번째 병원을 등록해보세요 →
-              </Link>
-            </div>
+            <EmptyState
+              icon="🏥"
+              title="등록된 병원이 없습니다"
+              description="첫 번째 병원을 등록해보세요"
+              action={{
+                label: "병원 등록하기",
+                href: "/admin/hospitals/new",
+              }}
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {hospitals.map((hospital) => (

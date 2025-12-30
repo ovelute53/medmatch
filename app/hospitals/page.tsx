@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import EmptyState from "../_components/EmptyState";
 
 export const dynamic = "force-dynamic";
 
@@ -37,15 +38,15 @@ export default async function HospitalsPage() {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {hospitals.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <p className="text-gray-500 text-lg mb-4">등록된 병원이 없습니다.</p>
-            <Link
-              href="/admin/hospitals/new"
-              className="inline-block text-blue-600 hover:text-blue-800"
-            >
-              첫 번째 병원을 등록해보세요 →
-            </Link>
-          </div>
+          <EmptyState
+            icon="🏥"
+            title="등록된 병원이 없습니다"
+            description="첫 번째 병원을 등록해보세요"
+            action={{
+              label: "병원 등록하기",
+              href: "/admin/hospitals/new",
+            }}
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {hospitals.map((hospital) => (

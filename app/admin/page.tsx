@@ -98,7 +98,15 @@ export default async function AdminPage() {
               </Link>
             </div>
             {hospitals.length === 0 ? (
-              <p className="text-gray-500">등록된 병원이 없습니다.</p>
+              <div className="text-center py-8">
+                <p className="text-gray-500 mb-2">등록된 병원이 없습니다.</p>
+                <Link
+                  href="/admin/hospitals/new"
+                  className="text-sm text-blue-600 hover:text-blue-800"
+                >
+                  병원 등록하기 →
+                </Link>
+              </div>
             ) : (
               <ul className="space-y-3">
                 {hospitals.map((hospital) => (
@@ -140,7 +148,15 @@ export default async function AdminPage() {
               <h2 className="text-xl font-semibold text-gray-900">최근 등록된 진료과</h2>
             </div>
             {departments.length === 0 ? (
-              <p className="text-gray-500">등록된 진료과가 없습니다.</p>
+              <div className="text-center py-8">
+                <p className="text-gray-500 mb-2">등록된 진료과가 없습니다.</p>
+                <Link
+                  href="/admin/departments/new"
+                  className="text-sm text-blue-600 hover:text-blue-800"
+                >
+                  진료과 등록하기 →
+                </Link>
+              </div>
             ) : (
               <ul className="space-y-3">
                 {departments.map((dept) => (
