@@ -3,10 +3,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const hospitalId = Number(params.id);
+    const { id } = await params;
+    const hospitalId = Number(id);
     if (!Number.isFinite(hospitalId)) {
       return NextResponse.json({ message: "Invalid hospital id" }, { status: 400 });
     }

@@ -3,10 +3,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const departmentId = Number(params.id);
+    const { id } = await params;
+    const departmentId = Number(id);
     if (!Number.isFinite(departmentId)) {
       return NextResponse.json({ error: "Invalid department id" }, { status: 400 });
     }
@@ -31,10 +32,11 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const departmentId = Number(params.id);
+    const { id } = await params;
+    const departmentId = Number(id);
     if (!Number.isFinite(departmentId)) {
       return NextResponse.json({ error: "Invalid department id" }, { status: 400 });
     }
@@ -72,10 +74,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const departmentId = Number(params.id);
+    const { id } = await params;
+    const departmentId = Number(id);
     if (!Number.isFinite(departmentId)) {
       return NextResponse.json({ error: "Invalid department id" }, { status: 400 });
     }
