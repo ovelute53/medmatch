@@ -102,13 +102,14 @@ export default function HomePage() {
   const cities = Array.from(new Set(hospitals.map((h) => h.city).filter(Boolean))) as string[];
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <main className="min-h-screen bg-gradient-to-br from-burgundy-50 via-rose-50 to-pink-50">
       {/* 헤더 */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">MedMatch</h1>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-burgundy-700 to-burgundy-900 bg-clip-text text-transparent">
+                SeoulGigibae</h1>
               <p className="text-gray-600 mt-1">외국인 환자 맞춤 병원 매칭 플랫폼</p>
             </div>
             <UserMenu />
@@ -141,7 +142,7 @@ export default function HomePage() {
                   onChange={(e) =>
                     setSelectedDepartment(e.target.value ? Number(e.target.value) : null)
                   }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy-500"
                 >
                   <option value="">전체</option>
                   {departments.map((dept) => (
@@ -160,7 +161,7 @@ export default function HomePage() {
                 <select
                   value={selectedCity}
                   onChange={(e) => setSelectedCity(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-burgundy-500"
                 >
                   <option value="">전체</option>
                   {cities.map((city) => (
@@ -189,8 +190,8 @@ export default function HomePage() {
                   }
                   className={`px-4 py-2 rounded-full border-2 transition-all ${
                     selectedDepartment === dept.id
-                      ? "bg-blue-600 text-white border-blue-600"
-                      : "bg-white text-gray-700 border-gray-300 hover:border-blue-500"
+                      ? "bg-burgundy-700 text-white border-blue-600"
+                      : "bg-white text-gray-700 border-gray-300 hover:border-burgundy-500"
                   }`}
                 >
                   <span className="mr-2">{dept.icon || "🏥"}</span>

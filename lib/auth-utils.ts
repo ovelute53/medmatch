@@ -1,5 +1,5 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "./auth";
+import { auth } from "./auth";
+
 
 export type UserRole = "user" | "admin";
 
@@ -16,7 +16,7 @@ export interface AuthUser {
  */
 export async function getCurrentUser(): Promise<AuthUser | null> {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session?.user) return null;
 
     return {

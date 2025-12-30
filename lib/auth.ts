@@ -1,4 +1,4 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "./prisma";
@@ -103,3 +103,6 @@ export const authOptions: NextAuthOptions = {
   trustHost: true,
   debug: process.env.NODE_ENV === "development",
 };
+
+// NextAuth v5
+export const { auth, handlers, signIn, signOut } = NextAuth(authOptions);

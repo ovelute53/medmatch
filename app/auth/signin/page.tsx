@@ -14,6 +14,10 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  function handleBack() {
+    router.back();
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -110,13 +114,27 @@ export default function SignInPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-burgundy-50 via-rose-50 to-pink-50 py-12 px-4">
       <div className="max-w-md mx-auto">
+        <div className="mb-6">
+          <button
+            onClick={handleBack}
+            className="text-burgundy-700 hover:text-burgundy-900 inline-flex items-center font-medium"
+          >
+            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            뒤로가기
+          </button>
+        </div>
+        
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">로그인</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-burgundy-700 to-burgundy-900 bg-clip-text text-transparent mb-2">
+            로그인
+          </h1>
           <p className="text-gray-600">
             또는{" "}
-            <Link href="/auth/register" className="text-blue-600 hover:underline">
+            <Link href="/auth/register" className="text-burgundy-700 hover:text-burgundy-900 font-medium">
               회원가입
             </Link>
           </p>

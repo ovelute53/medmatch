@@ -31,10 +31,24 @@ export default async function AdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 py-8">
+    <main className="min-h-screen bg-gradient-to-br from-burgundy-50 via-rose-50 to-pink-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
+        <div className="mb-6">
+          <Link
+            href="/"
+            className="text-burgundy-700 hover:text-burgundy-900 inline-flex items-center font-medium mb-4"
+          >
+            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            홈으로
+          </Link>
+        </div>
+        
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">관리자 대시보드</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-burgundy-700 to-burgundy-900 bg-clip-text text-transparent mb-2">
+            관리자 대시보드
+          </h1>
           <p className="text-gray-600">병원 및 진료과를 관리합니다.</p>
         </div>
 

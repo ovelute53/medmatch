@@ -36,6 +36,10 @@ export default function ComparePage() {
   const [hospitalsData, setHospitalsData] = useState<HospitalDetails[]>([]);
   const [loading, setLoading] = useState(true);
 
+  function handleBack() {
+    router.back();
+  }
+
   useEffect(() => {
     const list = getComparisonHospitals();
     setComparisonList(list);
@@ -76,16 +80,22 @@ export default function ComparePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="bg-white shadow-sm border-b">
+    <main className="min-h-screen bg-gradient-to-br from-burgundy-50 via-rose-50 to-pink-50">
+      <header className="bg-white shadow-sm border-b border-rose-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-blue-600 hover:text-blue-800 inline-flex items-center">
-              ← 목록으로 돌아가기
-            </Link>
+            <button
+              onClick={handleBack}
+              className="text-burgundy-700 hover:text-burgundy-900 inline-flex items-center font-medium"
+            >
+              <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              뒤로가기
+            </button>
             <button
               onClick={handleClearAll}
-              className="text-sm text-red-600 hover:text-red-800"
+              className="text-sm text-red-600 hover:text-red-800 font-medium"
             >
               비교 목록 전체 삭제
             </button>

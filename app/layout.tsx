@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MedMatch - 외국인 환자 맞춤 병원 매칭 플랫폼",
-  description: "외국인 환자를 위한 다양한 진료과의 병원을 검색하고 매칭받으세요",
+  title: "SeoulGigibae - 외국인 환자 맞춤 병원 매칭 플랫폼",
+  description: "서울기기배 - 외국인 환자를 위한 최고의 병원을 찾아드립니다",
 };
 
 import { Providers } from "./providers";

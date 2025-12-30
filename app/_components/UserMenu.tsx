@@ -1,11 +1,13 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function UserMenu() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   if (status === "loading") {
@@ -27,7 +29,7 @@ export default function UserMenu() {
         </Link>
         <Link
           href="/auth/register"
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+          className="px-4 py-2 text-sm font-medium text-white bg-burgundy-700 rounded-lg hover:bg-burgundy-800 shadow-md"
         >
           회원가입
         </Link>
@@ -86,11 +88,22 @@ export default function UserMenu() {
               </Link>
             )}
             <button
-              onClick={() => {
+              onClick={async () => {
                 setIsOpen(false);
-                signOut({ callbackUrl: "/" });
+                try {
+                  await signOut({ 
+                    redirect: false,
+                    callbackUrl: "/" 
+                  });
+                  // 로그아웃 후 명시적으로 홈페이지로 리다이렉트
+                  window.location.href = "/";
+                } catch (error) {
+                  console.error("로그아웃 오류:", error);
+                  // 에러가 발생해도 홈페이지로 이동
+                  window.location.href = "/";
+                }
               }}
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium"
             >
               로그아웃
             </button>

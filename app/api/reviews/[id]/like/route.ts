@@ -21,7 +21,8 @@ export async function POST(
       );
     }
 
-    const userId = authResult.user!.id;
+    const userIdStr = authResult.user!.id;
+    const userId = parseInt(userIdStr, 10);
     const { id } = await params;
     const reviewId = Number(id);
 
@@ -140,7 +141,8 @@ export async function GET(
       return NextResponse.json({ userLike: null });
     }
 
-    const userId = authResult.user!.id;
+    const userIdStr = authResult.user!.id;
+    const userId = parseInt(userIdStr, 10);
     const { id } = await params;
     const reviewId = Number(id);
 

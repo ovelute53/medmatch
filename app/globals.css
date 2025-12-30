@@ -3,6 +3,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* SeoulGigibae Burgundy Theme Colors */
+  --burgundy-50: #fef2f2;
+  --burgundy-100: #fee2e2;
+  --burgundy-200: #fecaca;
+  --burgundy-300: #fca5a5;
+  --burgundy-400: #f87171;
+  --burgundy-500: #ef4444;
+  --burgundy-600: #dc2626;
+  --burgundy-700: #9f1239;
+  --burgundy-800: #881337;
+  --burgundy-900: #711432;
+  --burgundy-950: #4c0519;
 }
 
 @theme inline {
@@ -10,6 +22,24 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* SeoulGigibae Burgundy Colors */
+  --color-burgundy-50: var(--burgundy-50);
+  --color-burgundy-100: var(--burgundy-100);
+  --color-burgundy-200: var(--burgundy-200);
+  --color-burgundy-300: var(--burgundy-300);
+  --color-burgundy-400: var(--burgundy-400);
+  --color-burgundy-500: var(--burgundy-500);
+  --color-burgundy-600: var(--burgundy-600);
+  --color-burgundy-700: var(--burgundy-700);
+  --color-burgundy-800: var(--burgundy-800);
+  --color-burgundy-900: var(--burgundy-900);
+  --color-burgundy-950: var(--burgundy-950);
+  
+  /* Primary color set to burgundy */
+  --color-primary: var(--burgundy-700);
+  --color-primary-hover: var(--burgundy-800);
+  --color-primary-light: var(--burgundy-600);
 }
 
 @media (prefers-color-scheme: dark) {

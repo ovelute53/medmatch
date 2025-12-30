@@ -33,18 +33,21 @@ export default async function HospitalDetail({
   if (!hospital) notFound();
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <main className="min-h-screen bg-gradient-to-br from-burgundy-50 via-rose-50 to-pink-50">
       {/* 최근 본 병원 추적 */}
       <RecentHospitalTracker hospital={hospital} />
       
       {/* 헤더 */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white shadow-sm border-b border-rose-200">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <Link
             href="/"
-            className="text-blue-600 hover:text-blue-800 inline-flex items-center"
+            className="text-burgundy-700 hover:text-burgundy-900 inline-flex items-center font-medium"
           >
-            ← 목록으로 돌아가기
+            <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            목록으로 돌아가기
           </Link>
         </div>
       </header>

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "./auth";
+import { auth } from "./auth";
+
 
 export type UserRole = "user" | "admin";
 
@@ -8,7 +8,7 @@ export type UserRole = "user" | "admin";
  * API 라우트에서 인증 확인
  */
 export async function requireAuth() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session?.user) {
     return {
