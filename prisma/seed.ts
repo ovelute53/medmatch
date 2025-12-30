@@ -1,6 +1,20 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
+import "dotenv/config";
 
-const prisma = new PrismaClient();
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error("DATABASE_URL 환경 변수가 설정되지 않았습니다.");
+}
+
+const adapter = new PrismaLibSql({
+  url: databaseUrl,
+});
+
+const prisma = new PrismaClient({
+  adapter,
+  log: ["error", "warn"],
+});
 
 async function main() {
   console.log("🌱 시드 데이터 생성 시작...");
