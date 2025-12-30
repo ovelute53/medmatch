@@ -3,16 +3,17 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const hospitalId = Number(params.id);
+    const { id } = await params;
+    const hospitalId = Number(id);
     if (!Number.isFinite(hospitalId)) {
       return NextResponse.json({ message: "Invalid hospital id" }, { status: 400 });
     }
 
     const body = await req.json();
-    const { type, name, phone, message, preferredAt } = body;
+    const { type, name, phone, email, language, message, preferredAt } = body;
 
     if (!type || !name || !phone) {
       return NextResponse.json({ message: "필수값 누락" }, { status: 400 });
@@ -24,8 +25,10 @@ export async function POST(
         type,
         name,
         phone,
-        message: message || null,
-        preferredAt: preferredAt ? new Date(preferredAt) : null,
+        email: email || undefined,
+        language: language || undefined,
+        message: message || undefined,
+        preferredAt: preferredAt ? new Date(preferredAt) : undefined,
       },
     });
 

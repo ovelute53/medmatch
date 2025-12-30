@@ -7,27 +7,199 @@ datasource db {
 }
 
 model Hospital {
-  id        Int      @id @default(autoincrement()) // 네가 지금 Int 쓰는 걸로 보임
-  name      String
-  address   String
-  phone     String?
-  website   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  name          String
+  nameEn        String? // 영어 병원명
+  address       String
+  city          String? // 도시
+  country       String   @default("Korea")
+  phone         String?
+  website       String?
+  description   String? // 병원 설명
+  descriptionEn String? // 영어 설명
+  imageUrl      String? // 병원 이미지 URL
+  rating        Float?   @default(0) // 평점 (0-5)
+  reviewCount   Int      @default(0) // 리뷰 수
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  requests  Request[]
+  departments HospitalDepartment[]
+  requests    Request[]
+  reviews     Review[]
+  favorites   HospitalFavorite[]
+}
+
+model Department {
+  id          Int      @id @default(autoincrement())
+  name        String // 진료과명 (한국어)
+  nameEn      String // 진료과명 (영어)
+  icon        String? // 아이콘 이모지 또는 URL
+  description String? // 설명
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  hospitals HospitalDepartment[]
+}
+
+model HospitalDepartment {
+  id           Int        @id @default(autoincrement())
+  hospitalId   Int
+  departmentId Int
+  hospital     Hospital   @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@unique([hospitalId, departmentId])
 }
 
 model Request {
-  id          Int      @id @default(autoincrement())
-  hospitalId  Int
-  hospital    Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  hospitalId Int
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
 
-  type        String   // "inquiry" | "reservation" (일단 String으로)
+  type        String // "inquiry" | "reservation"
   name        String
   phone       String
+  email       String? // 이메일 추가
+  language    String? // 선호 언어
   message     String?
-  status      String   @default("new")
+  status      String    @default("new") // "new" | "contacted" | "completed" | "cancelled"
   preferredAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  hospitalId Int
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  userId     Int?     // 로그인한 사용자 ID (선택사항)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  name        String   // 리뷰 작성자 이름
+  email       String?  // 이메일 (선택사항)
+  rating      Float    // 평점 (0-5, 0.5 단위)
+  title       String?  // 리뷰 제목
+  content     String   // 리뷰 내용
+  language    String?  // 작성 언어
+  isVerified  Boolean  @default(false) // 검증된 리뷰 여부
+  likeCount   Int      @default(0) // 좋아요 수
+  dislikeCount Int     @default(0) // 싫어요 수
+  commentCount Int     @default(0) // 댓글 수
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  reports  ReviewReport[]
+  likes    ReviewLike[]
+  images   ReviewImage[]
+  comments ReviewComment[]
+
+  @@index([hospitalId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([likeCount])
+}
+
+model ReviewReport {
+  id         Int      @id @default(autoincrement())
+  reviewId   Int
+  review     Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  userId     Int?     // 신고한 사용자 ID (선택사항)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  reason      String   // 신고 사유
+  description String?  // 신고 상세 설명
+  reporterName String? // 신고자 이름 (선택사항)
+  reporterEmail String? // 신고자 이메일 (선택사항)
+  status      String   @default("pending") // "pending" | "reviewed" | "resolved" | "dismissed"
+  adminNote   String?  // 관리자 메모
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([reviewId])
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String   // 해시된 비밀번호
+  role      String   @default("user") // "user" | "admin"
+  image     String?  // 프로필 이미지 URL
+  emailVerified DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews        Review[]
+  reports        ReviewReport[]
+  favorites      HospitalFavorite[]
+  reviewLikes    ReviewLike[]
+  reviewComments ReviewComment[]
+
+  @@index([email])
+}
+
+model HospitalFavorite {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  hospitalId Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, hospitalId])
+  @@index([userId])
+  @@index([hospitalId])
+}
+
+// 리뷰 좋아요/싫어요
+model ReviewLike {
+  id        Int      @id @default(autoincrement())
+  reviewId  Int
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isLike    Boolean  // true: 좋아요, false: 싫어요
+  createdAt DateTime @default(now())
+
+  @@unique([reviewId, userId])
+  @@index([reviewId])
+  @@index([userId])
+  @@index([isLike])
+}
+
+// 리뷰 이미지
+model ReviewImage {
+  id        Int      @id @default(autoincrement())
+  reviewId  Int
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  imageUrl  String   // 이미지 URL
+  caption   String?  // 이미지 설명
+  order     Int      @default(0) // 이미지 순서
+  createdAt DateTime @default(now())
+
+  @@index([reviewId])
+  @@index([order])
+}
+
+// 리뷰 댓글 (답글)
+model ReviewComment {
+  id        Int      @id @default(autoincrement())
+  reviewId  Int
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  userId    Int?     // 댓글 작성자 ID (선택사항)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  authorName String  // 작성자 이름
+  content    String  // 댓글 내용
+  isHospitalReply Boolean @default(false) // 병원 측 답변 여부
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([reviewId])
+  @@index([userId])
+  @@index([createdAt])
+  @@index([isHospitalReply])
 }
