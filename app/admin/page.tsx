@@ -38,7 +38,7 @@ export default async function AdminPage() {
           <p className="text-gray-600">병원 및 진료과를 관리합니다.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Link
             href="/admin/hospitals/new"
             className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
@@ -66,6 +66,21 @@ export default async function AdminPage() {
                 <p className="text-gray-600">새로운 진료과를 등록합니다.</p>
               </div>
               <span className="text-4xl">💊</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/requests"
+            className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  문의 내역
+                </h2>
+                <p className="text-gray-600">병원 문의 및 예약 요청을 확인합니다.</p>
+              </div>
+              <span className="text-4xl">📋</span>
             </div>
           </Link>
         </div>

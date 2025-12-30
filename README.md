@@ -43,7 +43,19 @@ npx prisma db push
 npx prisma generate
 ```
 
-### 4. 개발 서버 실행
+### 4. 샘플 데이터 생성 (선택사항)
+
+개발 및 테스트를 위한 샘플 데이터를 생성합니다:
+
+```bash
+npm run db:seed
+```
+
+이 명령은 다음을 생성합니다:
+- 10개의 진료과 (내과, 외과, 정형외과 등)
+- 6개의 병원 (서울대학교병원, 삼성서울병원 등)
+
+### 5. 개발 서버 실행
 
 ```bash
 npm run dev
@@ -98,6 +110,7 @@ medmatch/
 - `/admin` - 관리자 대시보드
 - `/admin/hospitals/new` - 병원 등록
 - `/admin/departments/new` - 진료과 등록
+- `/admin/requests` - 문의 내역 확인
 
 ## API 엔드포인트
 

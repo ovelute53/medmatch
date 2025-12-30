@@ -23,6 +23,8 @@ export async function GET(req: Request) {
     }
 
     if (search) {
+      // SQLite는 대소문자 구분 없이 검색 (LIKE 사용)
+      const searchLower = search.toLowerCase();
       where.OR = [
         { name: { contains: search } },
         { nameEn: { contains: search } },
