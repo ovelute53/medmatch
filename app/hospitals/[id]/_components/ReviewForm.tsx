@@ -50,10 +50,15 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
 
     setLoading(true);
     try {
+      const requestBody = {
+        ...form,
+        userId: session?.user?.id || undefined,
+      };
+
       const res = await fetch(`/api/hospitals/${hospitalId}/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await res.json();
