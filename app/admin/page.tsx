@@ -114,28 +114,36 @@ export default async function AdminPage() {
                     key={hospital.id}
                     className="border-b border-gray-200 pb-3 last:border-0"
                   >
-                    <Link
-                      href={`/hospitals/${hospital.id}`}
-                      className="block hover:text-blue-600"
-                    >
-                      <div className="font-medium text-gray-900">{hospital.name}</div>
-                      <div className="text-sm text-gray-600 mt-1">
-                        {hospital.city && `${hospital.city}, `}
-                        {hospital.address}
-                      </div>
-                      {hospital.departments.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {hospital.departments.slice(0, 3).map((hd: { department: { id: number; icon: string | null; name: string } }) => (
-                            <span
-                              key={hd.department.id}
-                              className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded-full"
-                            >
-                              {hd.department.icon} {hd.department.name}
-                            </span>
-                          ))}
+                    <div className="flex items-start justify-between">
+                      <Link
+                        href={`/hospitals/${hospital.id}`}
+                        className="flex-1 hover:text-blue-600"
+                      >
+                        <div className="font-medium text-gray-900">{hospital.name}</div>
+                        <div className="text-sm text-gray-600 mt-1">
+                          {hospital.city && `${hospital.city}, `}
+                          {hospital.address}
                         </div>
-                      )}
-                    </Link>
+                        {hospital.departments.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-2">
+                            {hospital.departments.slice(0, 3).map((hd: { department: { id: number; icon: string | null; name: string } }) => (
+                              <span
+                                key={hd.department.id}
+                                className="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded-full"
+                              >
+                                {hd.department.icon} {hd.department.name}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </Link>
+                      <Link
+                        href={`/admin/hospitals/${hospital.id}/edit`}
+                        className="ml-4 text-sm text-blue-600 hover:text-blue-800 whitespace-nowrap"
+                      >
+                        수정
+                      </Link>
+                    </div>
                   </li>
                 ))}
               </ul>

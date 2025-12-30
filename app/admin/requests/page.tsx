@@ -1,37 +1,65 @@
-import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import StatusDropdown from "./_components/StatusDropdown";
+import LoadingSpinner from "@/app/_components/LoadingSpinner";
+import ErrorMessage from "@/app/_components/ErrorMessage";
 
-export const dynamic = "force-dynamic";
+interface Hospital {
+  id: number;
+  name: string;
+  nameEn: string | null;
+}
 
-export default async function RequestsPage() {
-  let requests = [];
-  let hospitals = [];
+interface Request {
+  id: number;
+  hospitalId: number;
+  type: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  language: string | null;
+  message: string | null;
+  status: string;
+  preferredAt: Date | null;
+  createdAt: Date;
+  hospital: Hospital;
+}
 
-  try {
-    [requests, hospitals] = await Promise.all([
-      prisma.request.findMany({
-        include: {
-          hospital: {
-            select: {
-              id: true,
-              name: true,
-              nameEn: true,
-            },
-          },
-        },
-        orderBy: { createdAt: "desc" },
-      }),
-      prisma.hospital.findMany({
-        select: {
-          id: true,
-          name: true,
-        },
-        orderBy: { name: "asc" },
-      }),
-    ]);
-  } catch (error) {
-    console.error("문의 내역 로드 오류:", error);
+export default function RequestsPage() {
+  const [requests, setRequests] = useState<Request[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadRequests();
+  }, []);
+
+  async function loadRequests() {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/requests");
+      if (!res.ok) {
+        throw new Error("문의 내역을 불러오는데 실패했습니다.");
+      }
+      const data = await res.json();
+      if (data.requests) {
+        setRequests(data.requests);
+      }
+    } catch (error: any) {
+      console.error("문의 내역 로드 오류:", error);
+      setError(error.message || "문의 내역을 불러오는데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleStatusChange(requestId: number, newStatus: string) {
+    setRequests((prev) =>
+      prev.map((req) => (req.id === requestId ? { ...req, status: newStatus } : req))
+    );
   }
 
   const statusColors: Record<string, string> = {
@@ -59,7 +87,7 @@ export default async function RequestsPage() {
             ← 관리자 대시보드로
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">문의 내역</h1>
-          <p className="text-gray-600">병원별 문의 및 예약 요청을 확인합니다.</p>
+          <p className="text-gray-600">병원별 문의 및 예약 요청을 확인하고 관리합니다.</p>
         </div>
 
         {/* 통계 카드 */}
@@ -90,7 +118,18 @@ export default async function RequestsPage() {
 
         {/* 문의 목록 */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {requests.length === 0 ? (
+          {loading ? (
+            <LoadingSpinner size="lg" text="문의 내역을 불러오는 중..." />
+          ) : error ? (
+            <div className="p-8">
+              <ErrorMessage
+                message={error}
+                onRetry={() => {
+                  loadRequests();
+                }}
+              />
+            </div>
+          ) : requests.length === 0 ? (
             <div className="p-12 text-center">
               <p className="text-gray-500 text-lg">등록된 문의가 없습니다.</p>
             </div>
@@ -160,13 +199,11 @@ export default async function RequestsPage() {
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            statusColors[request.status] || "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {statusLabels[request.status] || request.status}
-                        </span>
+                        <StatusDropdown
+                          requestId={request.id}
+                          currentStatus={request.status}
+                          onStatusChange={handleStatusChange}
+                        />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {request.language === "ko"
@@ -187,8 +224,8 @@ export default async function RequestsPage() {
           )}
         </div>
 
-        {/* 문의 상세 보기 (선택 시) */}
-        {requests.length > 0 && (
+        {/* 문의 상세 보기 */}
+        {requests.length > 0 && !loading && (
           <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">문의 상세</h2>
             <div className="space-y-4">
@@ -206,13 +243,11 @@ export default async function RequestsPage() {
                         {new Date(request.createdAt).toLocaleString("ko-KR")}
                       </p>
                     </div>
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        statusColors[request.status] || "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {statusLabels[request.status] || request.status}
-                    </span>
+                    <StatusDropdown
+                      requestId={request.id}
+                      currentStatus={request.status}
+                      onStatusChange={handleStatusChange}
+                    />
                   </div>
                   {request.message && (
                     <p className="text-sm text-gray-700 mt-2 whitespace-pre-wrap">
@@ -228,4 +263,3 @@ export default async function RequestsPage() {
     </main>
   );
 }
-
