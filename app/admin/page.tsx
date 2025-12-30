@@ -170,13 +170,21 @@ export default async function AdminPage() {
                 {departments.map((dept) => (
                   <li
                     key={dept.id}
-                    className="flex items-center space-x-3 border-b border-gray-200 pb-3 last:border-0"
+                    className="flex items-center justify-between border-b border-gray-200 pb-3 last:border-0"
                   >
-                    <span className="text-2xl">{dept.icon || "🏥"}</span>
-                    <div>
-                      <div className="font-medium text-gray-900">{dept.name}</div>
-                      <div className="text-sm text-gray-600">{dept.nameEn}</div>
+                    <div className="flex items-center space-x-3 flex-1">
+                      <span className="text-2xl">{dept.icon || "🏥"}</span>
+                      <div>
+                        <div className="font-medium text-gray-900">{dept.name}</div>
+                        <div className="text-sm text-gray-600">{dept.nameEn}</div>
+                      </div>
                     </div>
+                    <Link
+                      href={`/admin/departments/${dept.id}/edit`}
+                      className="ml-4 text-sm text-blue-600 hover:text-blue-800 whitespace-nowrap"
+                    >
+                      수정
+                    </Link>
                   </li>
                 ))}
               </ul>
