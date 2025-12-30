@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { shouldAutoVerify } from "@/lib/review-verification";
 
 export async function GET(
   req: Request,
@@ -131,6 +132,14 @@ export async function POST(
       );
     }
 
+    // 자동 검증 여부 확인
+    const isVerified = shouldAutoVerify({
+      userId: userId ? Number(userId) : undefined,
+      content,
+      title,
+      rating: roundedRating,
+    });
+
     const review = await prisma.review.create({
       data: {
         hospitalId,
@@ -141,6 +150,7 @@ export async function POST(
         title: title || undefined,
         content,
         language: language || undefined,
+        isVerified,
       },
     });
 
