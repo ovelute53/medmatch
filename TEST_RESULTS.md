@@ -20,28 +20,31 @@
 4. **진료과 상세 조회 API** (`GET /api/admin/departments/[id]`)
    - ✅ 진료과 정보 정상 반환
 
-### 🔄 테스트 중인 기능
+### ✅ 추가 테스트 완료
 
 1. **문의 전송 API** (`POST /api/hospitals/[id]/requests`)
-   - 테스트 필요: 실제 병원 ID로 문의 전송
+   - ✅ 문의 전송 성공 확인
+   - ✅ 문의 데이터 정상 저장 확인
 
-2. **문의 내역 조회 API** (`GET /api/admin/requests`)
-   - 테스트 필요: 문의 목록 확인
+### 🔄 웹 UI 테스트 필요
 
-3. **문의 상태 변경 API** (`PATCH /api/admin/requests/[id]`)
-   - 테스트 필요: 상태 변경 확인
+1. **문의 내역 조회 API** (`GET /api/admin/requests`)
+   - 웹 UI에서 테스트 필요
 
-4. **병원 수정 API** (`PATCH /api/admin/hospitals/[id]`)
-   - 테스트 필요: 병원 정보 수정
+2. **문의 상태 변경 API** (`PATCH /api/admin/requests/[id]`)
+   - 웹 UI에서 드롭다운으로 테스트 필요
 
-5. **병원 삭제 API** (`DELETE /api/admin/hospitals/[id]`)
-   - 테스트 필요: 병원 삭제 확인
+3. **병원 수정 API** (`PATCH /api/admin/hospitals/[id]`)
+   - 웹 UI에서 폼으로 테스트 필요
 
-6. **진료과 수정 API** (`PATCH /api/admin/departments/[id]`)
-   - 테스트 필요: 진료과 정보 수정
+4. **병원 삭제 API** (`DELETE /api/admin/hospitals/[id]`)
+   - 웹 UI에서 삭제 버튼으로 테스트 필요
 
-7. **진료과 삭제 API** (`DELETE /api/admin/departments/[id]`)
-   - 테스트 필요: 진료과 삭제 확인
+5. **진료과 수정 API** (`PATCH /api/admin/departments/[id]`)
+   - 웹 UI에서 폼으로 테스트 필요
+
+6. **진료과 삭제 API** (`DELETE /api/admin/departments/[id]`)
+   - 웹 UI에서 삭제 버튼으로 테스트 필요
 
 ## 웹 UI 테스트 가이드
 
@@ -93,9 +96,14 @@
    - 삭제 테스트 (사용 중인 경우 에러 확인)
    ```
 
-## 발견된 이슈
+## 발견된 이슈 및 수정
 
-없음 (현재)
+### ✅ 수정 완료
+
+1. **Next.js 16 params 처리 이슈**
+   - 문제: 동적 라우트의 params가 Promise로 변경됨
+   - 수정: 모든 API 라우트에서 `await params` 처리
+   - 상태: ✅ 수정 완료 및 테스트 통과
 
 ## 테스트 환경
 
