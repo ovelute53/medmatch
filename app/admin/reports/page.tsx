@@ -64,90 +64,92 @@ export default async function ReportsPage() {
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  신고일시
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  병원
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  리뷰 내용
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  신고 사유
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  신고자
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  상태
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  관리
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {reports.map((report) => (
-                <tr key={report.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {new Date(report.createdAt).toLocaleString("ko-KR", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <Link
-                      href={`/hospitals/${report.review.hospital.id}`}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      {report.review.hospital.name}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900 max-w-xs">
-                    <div className="truncate">
-                      {report.review.title && (
-                        <div className="font-medium">{report.review.title}</div>
-                      )}
-                      <div className="text-gray-600 truncate">
-                        {report.review.content}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {reasonLabels[report.reason] || report.reason}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {report.reporterName || report.reporterEmail || "-"}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 py-1 text-xs font-medium rounded-full ${
-                        statusLabels[report.status]?.color ||
-                        "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {statusLabels[report.status]?.label || report.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <Link
-                      href={`/admin/reports/${report.id}`}
-                      className="text-blue-600 hover:text-blue-800"
-                    >
-                      상세보기
-                    </Link>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    신고일시
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    병원
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    리뷰 내용
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    신고 사유
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    신고자
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    상태
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky right-0 bg-gray-50">
+                    관리
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {reports.map((report) => (
+                  <tr key={report.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {new Date(report.createdAt).toLocaleString("ko-KR", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm">
+                      <Link
+                        href={`/hospitals/${report.review.hospital.id}`}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        {report.review.hospital.name}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-4 text-sm text-gray-900 max-w-xs">
+                      <div className="truncate">
+                        {report.review.title && (
+                          <div className="font-medium">{report.review.title}</div>
+                        )}
+                        <div className="text-gray-600 truncate">
+                          {report.review.content}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {reasonLabels[report.reason] || report.reason}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {report.reporterName || report.reporterEmail || "-"}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <span
+                        className={`px-2 py-1 text-xs font-medium rounded-full ${
+                          statusLabels[report.status]?.color ||
+                          "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {statusLabels[report.status]?.label || report.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm sticky right-0 bg-white">
+                      <Link
+                        href={`/admin/reports/${report.id}`}
+                        className="inline-block px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors font-medium"
+                      >
+                        상세보기
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
