@@ -18,7 +18,13 @@ export async function GET(
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json({ reviews });
+    // rating 값을 명시적으로 Number로 변환하여 JSON 직렬화 시 Float가 제대로 전달되도록 함
+    const reviewsWithNumericRating = reviews.map((review) => ({
+      ...review,
+      rating: Number(review.rating),
+    }));
+
+    return NextResponse.json({ reviews: reviewsWithNumericRating });
   } catch (error: any) {
     console.error("리뷰 조회 오류:", error);
     return NextResponse.json(
@@ -51,12 +57,15 @@ export async function POST(
       );
     }
 
-    if (rating < 1 || rating > 5) {
+    if (rating < 0 || rating > 5) {
       return NextResponse.json(
-        { error: "평점은 1-5 사이여야 합니다." },
+        { error: "평점은 0-5 사이여야 합니다." },
         { status: 400 }
       );
     }
+
+    // 0.5 단위로 반올림
+    const roundedRating = Math.round(rating * 2) / 2;
 
     // 병원 존재 확인
     const hospital = await prisma.hospital.findUnique({
@@ -81,7 +90,7 @@ export async function POST(
         hospitalId,
         name,
         email: email || undefined,
-        rating,
+        rating: roundedRating,
         title: title || undefined,
         content,
         language: language || undefined,
@@ -95,12 +104,14 @@ export async function POST(
     });
 
     const averageRating =
-      allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+      allReviews.length > 0
+        ? allReviews.reduce((sum, r) => sum + Number(r.rating), 0) / allReviews.length
+        : 0;
 
     await prisma.hospital.update({
       where: { id: hospitalId },
       data: {
-        rating: Math.round(averageRating * 10) / 10, // 소수점 첫째 자리까지
+        rating: allReviews.length > 0 ? Math.round(averageRating * 10) / 10 : null,
         reviewCount: allReviews.length,
       },
     });

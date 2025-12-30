@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/app/_components/LoadingSpinner";
+import StarRating from "@/app/_components/StarRating";
+import EditReviewForm from "./EditReviewForm";
 
 interface Review {
   id: number;
@@ -24,6 +26,7 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
     loadReviews();
@@ -39,7 +42,19 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
       }
       const data = await res.json();
       if (data.reviews) {
-        setReviews(data.reviews);
+        // rating 값을 명시적으로 Number로 변환
+        const reviewsWithNumericRating = data.reviews.map((review: any) => {
+          const numericRating = Number(review.rating);
+          // 디버깅: rating 값 확인
+          if (isNaN(numericRating)) {
+            console.warn("Invalid rating value:", review.rating, "for review:", review.id);
+          }
+          return {
+            ...review,
+            rating: numericRating,
+          };
+        });
+        setReviews(reviewsWithNumericRating);
       }
     } catch (error: any) {
       console.error("리뷰 로드 오류:", error);
@@ -81,6 +96,16 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
     }
   }
 
+  async function handleEditSuccess() {
+    setEditingId(null);
+    // 리뷰 목록 새로고침
+    await loadReviews();
+    // 페이지 새로고침으로 평점 업데이트
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+  }
+
   const languageLabels: Record<string, string> = {
     ko: "한국어",
     en: "English",
@@ -119,57 +144,82 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
           key={review.id}
           className="bg-gray-50 rounded-lg p-4 border border-gray-200"
         >
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex-1">
-              <div className="flex items-center space-x-2 mb-1">
-                <span className="font-medium text-gray-900">{review.name}</span>
-                {review.isVerified && (
-                  <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
-                    ✓ 검증됨
-                  </span>
-                )}
-                {review.language && (
+          {editingId === review.id ? (
+            <EditReviewForm
+              hospitalId={hospitalId}
+              reviewId={review.id}
+              initialData={{
+                name: review.name,
+                email: review.email,
+                rating: review.rating,
+                title: review.title,
+                content: review.content,
+                language: review.language,
+              }}
+              onCancel={() => setEditingId(null)}
+              onSuccess={handleEditSuccess}
+            />
+          ) : (
+            <>
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <span className="font-medium text-gray-900">{review.name}</span>
+                    {review.isVerified && (
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+                        ✓ 검증됨
+                      </span>
+                    )}
+                    {review.language && (
+                      <span className="text-xs text-gray-500">
+                        ({languageLabels[review.language] || review.language})
+                      </span>
+                    )}
+                  </div>
+                  <div className="mb-2">
+                    <StarRating
+                      value={review.rating}
+                      onChange={() => {}}
+                      maxRating={5}
+                      allowHalf={true}
+                      size="sm"
+                      readonly={true}
+                      hospitalId={hospitalId}
+                    />
+                  </div>
+                  {review.title && (
+                    <h4 className="font-medium text-gray-900 mb-1">{review.title}</h4>
+                  )}
+                </div>
+                <div className="flex items-center space-x-2">
                   <span className="text-xs text-gray-500">
-                    ({languageLabels[review.language] || review.language})
+                    {new Date(review.createdAt).toLocaleDateString("ko-KR", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </span>
-                )}
-              </div>
-              <div className="flex items-center space-x-1 mb-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    className={`text-sm ${
-                      star <= review.rating ? "text-yellow-400" : "text-gray-300"
-                    }`}
+                  <button
+                    onClick={() => setEditingId(review.id)}
+                    disabled={deletingId === review.id || editingId !== null}
+                    className="text-xs text-blue-600 hover:text-blue-800 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+                    title="리뷰 수정"
                   >
-                    ⭐
-                  </span>
-                ))}
-                <span className="text-sm text-gray-600 ml-1">{review.rating}점</span>
+                    ✏️ 수정
+                  </button>
+                  <button
+                    onClick={() => handleDelete(review.id)}
+                    disabled={deletingId === review.id || editingId !== null}
+                    className="text-xs text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+                    title="리뷰 삭제"
+                  >
+                    {deletingId === review.id ? "삭제 중..." : "🗑️ 삭제"}
+                  </button>
+                </div>
               </div>
-              {review.title && (
-                <h4 className="font-medium text-gray-900 mb-1">{review.title}</h4>
-              )}
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs text-gray-500">
-                {new Date(review.createdAt).toLocaleDateString("ko-KR", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
-              <button
-                onClick={() => handleDelete(review.id)}
-                disabled={deletingId === review.id}
-                className="text-xs text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
-                title="리뷰 삭제"
-              >
-                {deletingId === review.id ? "삭제 중..." : "🗑️ 삭제"}
-              </button>
-            </div>
-          </div>
-          <p className="text-gray-700 whitespace-pre-wrap">{review.content}</p>
+              <p className="text-gray-700 whitespace-pre-wrap">{review.content}</p>
+            </>
+          )}
         </div>
       ))}
     </div>
