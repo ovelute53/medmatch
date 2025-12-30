@@ -5,6 +5,7 @@ import Link from "next/link";
 import LoadingSpinner from "./_components/LoadingSpinner";
 import ErrorMessage from "./_components/ErrorMessage";
 import EmptyState from "./_components/EmptyState";
+import HighlightText from "./_components/HighlightText";
 
 interface Department {
   id: number;
@@ -261,12 +262,18 @@ export default function HomePage() {
                       )}
                     </div>
                     {hospital.nameEn && (
-                      <p className="text-sm text-gray-500 mb-2">{hospital.nameEn}</p>
+                      <p className="text-sm text-gray-500 mb-2">
+                        <HighlightText text={hospital.nameEn} searchQuery={searchQuery} />
+                      </p>
                     )}
                     <p className="text-sm text-gray-600 mb-3 flex items-center">
                       <span className="mr-1">📍</span>
-                      {hospital.city && `${hospital.city}, `}
-                      {hospital.address}
+                      {hospital.city && (
+                        <>
+                          <HighlightText text={hospital.city} searchQuery={searchQuery} />,{" "}
+                        </>
+                      )}
+                      <HighlightText text={hospital.address} searchQuery={searchQuery} />
                     </p>
                     {hospital.departments.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
@@ -285,11 +292,11 @@ export default function HomePage() {
                         )}
                       </div>
                     )}
-                    {hospital.description && (
-                      <p className="text-sm text-gray-600 line-clamp-2">
-                        {hospital.description}
-                      </p>
-                    )}
+                  {hospital.description && (
+                    <p className="text-sm text-gray-600 line-clamp-2">
+                      <HighlightText text={hospital.description} searchQuery={searchQuery} />
+                    </p>
+                  )}
                     {hospital.reviewCount > 0 && (
                       <p className="text-xs text-gray-500 mt-2">
                         리뷰 {hospital.reviewCount}개
