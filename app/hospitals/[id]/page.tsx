@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import HospitalRequestForm from "./_components/HospitalRequestForm";
 import ReviewFormWrapper from "./_components/ReviewFormWrapper";
+import ReviewStatsChart from "@/app/_components/ReviewStatsChart";
 
 export const dynamic = "force-dynamic";
 
@@ -174,6 +175,13 @@ export default async function HospitalDetail({
                     </p>
                   </div>
                 )}
+              </div>
+            )}
+
+            {/* 리뷰 통계 */}
+            {hospital.reviewCount > 0 && (
+              <div className="mb-6">
+                <ReviewStatsChart hospitalId={hospital.id} />
               </div>
             )}
 

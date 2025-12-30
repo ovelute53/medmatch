@@ -6,6 +6,9 @@ import StarRating from "@/app/_components/StarRating";
 import EditReviewForm from "./EditReviewForm";
 import Pagination from "@/app/_components/Pagination";
 import ReportReviewModal from "./ReportReviewModal";
+import ReviewLikeButton from "@/app/_components/ReviewLikeButton";
+import ReviewImageGallery from "@/app/_components/ReviewImageGallery";
+import ReviewComments from "@/app/_components/ReviewComments";
 
 interface Review {
   id: number;
@@ -16,6 +19,9 @@ interface Review {
   content: string;
   language: string | null;
   isVerified: boolean;
+  likeCount: number;
+  dislikeCount: number;
+  commentCount: number;
   createdAt: Date;
 }
 
@@ -285,6 +291,24 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
                 </div>
               </div>
               <p className="text-gray-700 whitespace-pre-wrap">{review.content}</p>
+              
+              {/* 리뷰 이미지 갤러리 */}
+              <ReviewImageGallery reviewId={review.id} />
+              
+              {/* 좋아요/싫어요 버튼 */}
+              <div className="mt-3 flex items-center justify-between">
+                <ReviewLikeButton
+                  reviewId={review.id}
+                  initialLikeCount={review.likeCount || 0}
+                  initialDislikeCount={review.dislikeCount || 0}
+                />
+                <div className="flex items-center space-x-2 text-xs text-gray-500">
+                  <span>💬 {review.commentCount || 0}개의 댓글</span>
+                </div>
+              </div>
+              
+              {/* 리뷰 댓글 섹션 */}
+              <ReviewComments reviewId={review.id} />
             </>
           )}
         </div>
