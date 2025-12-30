@@ -27,6 +27,7 @@ model Request {
   name        String
   phone       String
   message     String?
+  status      String   @default("new")
   preferredAt DateTime?
   createdAt   DateTime @default(now())
 }
