@@ -7,6 +7,9 @@ import ErrorMessage from "./_components/ErrorMessage";
 import EmptyState from "./_components/EmptyState";
 import HighlightText from "./_components/HighlightText";
 import UserMenu from "./_components/UserMenu";
+import RecentHospitals from "./_components/RecentHospitals";
+import SearchInput from "./_components/SearchInput";
+import CompareButton from "./_components/CompareButton";
 
 interface Department {
   id: number;
@@ -119,12 +122,10 @@ export default function HomePage() {
           <div className="space-y-4">
             {/* 검색바 */}
             <div>
-              <input
-                type="text"
-                placeholder="병원명, 주소로 검색하세요..."
+              <SearchInput
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={setSearchQuery}
+                placeholder="병원명, 주소로 검색하세요..."
               />
             </div>
 
@@ -200,6 +201,9 @@ export default function HomePage() {
           </div>
         )}
 
+        {/* 최근 본 병원 */}
+        <RecentHospitals />
+
         {/* 병원 목록 */}
         <div>
           <div className="flex items-center justify-between mb-6">
@@ -230,25 +234,28 @@ export default function HomePage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {hospitals.map((hospital) => (
-                <Link
+                <div
                   key={hospital.id}
-                  href={`/hospitals/${hospital.id}`}
                   className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow overflow-hidden group"
                 >
-                  {hospital.imageUrl && (
-                    <div className="h-48 bg-gray-200 overflow-hidden">
-                      <img
-                        src={hospital.imageUrl}
-                        alt={hospital.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      />
-                    </div>
-                  )}
+                  <Link href={`/hospitals/${hospital.id}`}>
+                    {hospital.imageUrl && (
+                      <div className="h-48 bg-gray-200 overflow-hidden">
+                        <img
+                          src={hospital.imageUrl}
+                          alt={hospital.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                    )}
+                  </Link>
                   <div className="p-5">
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                        {hospital.name}
-                      </h3>
+                      <Link href={`/hospitals/${hospital.id}`}>
+                        <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer">
+                          {hospital.name}
+                        </h3>
+                      </Link>
                       {hospital.rating !== null && hospital.rating > 0 && (
                         <div className="flex items-center text-yellow-500">
                           <span className="text-sm font-medium">
@@ -288,18 +295,23 @@ export default function HomePage() {
                         )}
                       </div>
                     )}
-                  {hospital.description && (
-                    <p className="text-sm text-gray-600 line-clamp-2">
-                      <HighlightText text={hospital.description} searchQuery={searchQuery} />
-                    </p>
-                  )}
-                    {hospital.reviewCount > 0 && (
-                      <p className="text-xs text-gray-500 mt-2">
-                        리뷰 {hospital.reviewCount}개
+                    {hospital.description && (
+                      <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+                        <HighlightText text={hospital.description} searchQuery={searchQuery} />
                       </p>
                     )}
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                      {hospital.reviewCount > 0 && (
+                        <p className="text-xs text-gray-500">
+                          리뷰 {hospital.reviewCount}개
+                        </p>
+                      )}
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <CompareButton hospital={hospital} />
+                      </div>
+                    </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           )}
