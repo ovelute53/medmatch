@@ -5,6 +5,7 @@ import LoadingSpinner from "@/app/_components/LoadingSpinner";
 import StarRating from "@/app/_components/StarRating";
 import EditReviewForm from "./EditReviewForm";
 import Pagination from "@/app/_components/Pagination";
+import ReportReviewModal from "./ReportReviewModal";
 
 interface Review {
   id: number;
@@ -39,6 +40,7 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [reportingId, setReportingId] = useState<number | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>("latest");
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
@@ -265,8 +267,16 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
                     ✏️ 수정
                   </button>
                   <button
+                    onClick={() => setReportingId(review.id)}
+                    disabled={deletingId === review.id || editingId !== null || reportingId !== null}
+                    className="text-xs text-orange-600 hover:text-orange-800 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+                    title="리뷰 신고"
+                  >
+                    🚨 신고
+                  </button>
+                  <button
                     onClick={() => handleDelete(review.id)}
-                    disabled={deletingId === review.id || editingId !== null}
+                    disabled={deletingId === review.id || editingId !== null || reportingId !== null}
                     className="text-xs text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
                     title="리뷰 삭제"
                   >
@@ -284,6 +294,17 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
           currentPage={pagination.page}
           totalPages={pagination.totalPages}
           onPageChange={handlePageChange}
+        />
+      )}
+      {reportingId && (
+        <ReportReviewModal
+          reviewId={reportingId}
+          hospitalId={hospitalId}
+          isOpen={true}
+          onClose={() => setReportingId(null)}
+          onSuccess={() => {
+            setReportingId(null);
+          }}
         />
       )}
     </div>

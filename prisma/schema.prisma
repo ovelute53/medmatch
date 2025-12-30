@@ -82,6 +82,27 @@ model Review {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  reports ReviewReport[]
+
   @@index([hospitalId])
+  @@index([createdAt])
+}
+
+model ReviewReport {
+  id         Int      @id @default(autoincrement())
+  reviewId   Int
+  review     Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  reason      String   // 신고 사유
+  description String?  // 신고 상세 설명
+  reporterName String? // 신고자 이름 (선택사항)
+  reporterEmail String? // 신고자 이메일 (선택사항)
+  status      String   @default("pending") // "pending" | "reviewed" | "resolved" | "dismissed"
+  adminNote   String?  // 관리자 메모
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([reviewId])
+  @@index([status])
   @@index([createdAt])
 }

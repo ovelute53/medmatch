@@ -38,6 +38,15 @@ export default async function AdminPage() {
           <p className="text-gray-600">병원 및 진료과를 관리합니다.</p>
         </div>
 
+        <div className="mb-6">
+          <Link
+            href="/admin/reports"
+            className="inline-block px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+          >
+            리뷰 신고 관리
+          </Link>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Link
             href="/admin/hospitals/new"
