@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MedMatch - 외국인 환자 맞춤 병원 매칭 플랫폼
 
-## Getting Started
+외국인 환자들을 대상으로 다양한 진료과의 병원을 검색하고 매칭시켜주는 웹 애플리케이션입니다. 강남언니 앱을 모티브로 제작되었습니다.
 
-First, run the development server:
+## 주요 기능
+
+- 🏥 **병원 검색 및 필터링**: 진료과, 도시별로 병원 검색
+- 🔍 **실시간 검색**: 병원명, 주소, 설명으로 검색
+- 📋 **진료과별 분류**: 다양한 진료과별 병원 목록 제공
+- 📝 **진료 문의**: 병원별 문의 및 예약 요청
+- 🌐 **다국어 지원**: 한국어/영어 병원 정보 및 다국어 문의 지원
+- ⭐ **평점 시스템**: 병원 평점 및 리뷰 수 표시
+- 🎨 **모던한 UI**: Tailwind CSS 기반 반응형 디자인
+
+## 기술 스택
+
+- **프레임워크**: Next.js 16 (App Router)
+- **언어**: TypeScript
+- **데이터베이스**: SQLite (Prisma ORM)
+- **스타일링**: Tailwind CSS 4
+- **폰트**: Geist Sans, Geist Mono
+
+## 시작하기
+
+### 1. 의존성 설치
+
+```bash
+npm install
+```
+
+### 2. 환경 변수 설정
+
+`.env` 파일을 생성하고 데이터베이스 URL을 설정하세요:
+
+```env
+DATABASE_URL="file:./prisma/dev.db"
+```
+
+### 3. 데이터베이스 마이그레이션
+
+```bash
+npx prisma db push
+npx prisma generate
+```
+
+### 4. 개발 서버 실행
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 확인하세요.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 프로젝트 구조
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+medmatch/
+├── app/
+│   ├── api/              # API 라우트
+│   │   ├── hospitals/    # 병원 관련 API
+│   │   └── departments/  # 진료과 관련 API
+│   ├── admin/            # 관리자 페이지
+│   │   ├── hospitals/    # 병원 관리
+│   │   └── departments/  # 진료과 관리
+│   ├── hospitals/        # 병원 목록 및 상세 페이지
+│   └── page.tsx          # 메인 홈페이지
+├── prisma/
+│   └── schema.prisma     # 데이터베이스 스키마
+└── lib/
+    └── prisma.ts         # Prisma 클라이언트 설정
+```
 
-## Learn More
+## 데이터베이스 모델
 
-To learn more about Next.js, take a look at the following resources:
+### Hospital (병원)
+- 기본 정보: 이름, 주소, 전화번호, 웹사이트
+- 다국어 지원: 한국어/영어 이름 및 설명
+- 위치 정보: 국가, 도시
+- 평점: 평점 및 리뷰 수
+- 진료과: 다대다 관계로 여러 진료과 연결
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Department (진료과)
+- 이름: 한국어/영어
+- 아이콘: 이모지 또는 이미지 URL
+- 설명
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Request (문의)
+- 병원별 문의 및 예약 요청
+- 환자 정보: 이름, 전화번호, 이메일
+- 선호 언어
+- 희망 일시 (예약 시)
 
-## Deploy on Vercel
+## 주요 페이지
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/` - 메인 홈페이지 (병원 검색 및 목록)
+- `/hospitals` - 전체 병원 목록
+- `/hospitals/[id]` - 병원 상세 페이지 및 문의 폼
+- `/admin` - 관리자 대시보드
+- `/admin/hospitals/new` - 병원 등록
+- `/admin/departments/new` - 진료과 등록
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## API 엔드포인트
+
+- `GET /api/hospitals` - 병원 목록 조회 (검색/필터링 지원)
+- `GET /api/departments` - 진료과 목록 조회
+- `POST /api/admin/hospitals` - 병원 등록
+- `POST /api/departments` - 진료과 등록
+- `POST /api/hospitals/[id]/requests` - 병원 문의 전송
+
+## 개발 가이드
+
+### 새로운 진료과 추가
+
+1. 관리자 페이지(`/admin/departments/new`)에서 진료과 등록
+2. 또는 API를 통해 직접 추가
+
+### 병원 등록
+
+1. 관리자 페이지(`/admin/hospitals/new`)에서 병원 정보 입력
+2. 진료과 선택
+3. 저장
+
+### 데이터베이스 확인
+
+Prisma Studio를 사용하여 데이터베이스를 시각적으로 확인할 수 있습니다:
+
+```bash
+npx prisma studio
+```
+
+## 라이선스
+
+이 프로젝트는 개인 프로젝트입니다.

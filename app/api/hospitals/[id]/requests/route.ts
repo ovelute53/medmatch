@@ -12,7 +12,7 @@ export async function POST(
     }
 
     const body = await req.json();
-    const { type, name, phone, message, preferredAt } = body;
+    const { type, name, phone, email, language, message, preferredAt } = body;
 
     if (!type || !name || !phone) {
       return NextResponse.json({ message: "필수값 누락" }, { status: 400 });
@@ -24,8 +24,10 @@ export async function POST(
         type,
         name,
         phone,
-        message: message || null,
-        preferredAt: preferredAt ? new Date(preferredAt) : null,
+        email: email || undefined,
+        language: language || undefined,
+        message: message || undefined,
+        preferredAt: preferredAt ? new Date(preferredAt) : undefined,
       },
     });
 

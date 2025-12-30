@@ -7,27 +7,61 @@ datasource db {
 }
 
 model Hospital {
-  id        Int      @id @default(autoincrement()) // 네가 지금 Int 쓰는 걸로 보임
-  name      String
-  address   String
-  phone     String?
-  website   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  name          String
+  nameEn        String? // 영어 병원명
+  address       String
+  city          String? // 도시
+  country       String   @default("Korea")
+  phone         String?
+  website       String?
+  description   String? // 병원 설명
+  descriptionEn String? // 영어 설명
+  imageUrl      String? // 병원 이미지 URL
+  rating        Float?   @default(0) // 평점 (0-5)
+  reviewCount   Int      @default(0) // 리뷰 수
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  requests  Request[]
+  departments HospitalDepartment[]
+  requests    Request[]
+}
+
+model Department {
+  id          Int      @id @default(autoincrement())
+  name        String // 진료과명 (한국어)
+  nameEn      String // 진료과명 (영어)
+  icon        String? // 아이콘 이모지 또는 URL
+  description String? // 설명
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  hospitals HospitalDepartment[]
+}
+
+model HospitalDepartment {
+  id           Int        @id @default(autoincrement())
+  hospitalId   Int
+  departmentId Int
+  hospital     Hospital   @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+
+  @@unique([hospitalId, departmentId])
 }
 
 model Request {
-  id          Int      @id @default(autoincrement())
-  hospitalId  Int
-  hospital    Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  id         Int      @id @default(autoincrement())
+  hospitalId Int
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
 
-  type        String   // "inquiry" | "reservation" (일단 String으로)
+  type        String // "inquiry" | "reservation"
   name        String
   phone       String
+  email       String? // 이메일 추가
+  language    String? // 선호 언어
   message     String?
-  status      String   @default("new")
+  status      String    @default("new") // "new" | "contacted" | "completed" | "cancelled"
   preferredAt DateTime?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
 }
