@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import LoadingSpinner from "@/app/_components/LoadingSpinner";
 import StarRating from "@/app/_components/StarRating";
 import EditReviewForm from "./EditReviewForm";
+import Pagination from "@/app/_components/Pagination";
 
 interface Review {
   id: number;
@@ -17,9 +18,20 @@ interface Review {
   createdAt: Date;
 }
 
+interface PaginationInfo {
+  page: number;
+  limit: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+}
+
 interface ReviewListProps {
   hospitalId: number;
 }
+
+type SortOption = "latest" | "oldest" | "ratingHigh" | "ratingLow";
 
 export default function ReviewList({ hospitalId }: ReviewListProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -27,16 +39,24 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [sortBy, setSortBy] = useState<SortOption>("latest");
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
 
   useEffect(() => {
     loadReviews();
-  }, [hospitalId]);
+  }, [hospitalId, sortBy, page]);
 
   async function loadReviews() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/hospitals/${hospitalId}/reviews`);
+      const params = new URLSearchParams({
+        sortBy,
+        page: page.toString(),
+        limit: "10",
+      });
+      const res = await fetch(`/api/hospitals/${hospitalId}/reviews?${params}`);
       if (!res.ok) {
         throw new Error("리뷰를 불러오는데 실패했습니다.");
       }
@@ -55,6 +75,9 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
           };
         });
         setReviews(reviewsWithNumericRating);
+        if (data.pagination) {
+          setPagination(data.pagination);
+        }
       }
     } catch (error: any) {
       console.error("리뷰 로드 오류:", error);
@@ -62,6 +85,17 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSortChange(newSortBy: SortOption) {
+    setSortBy(newSortBy);
+    setPage(1); // 정렬 변경 시 첫 페이지로 이동
+  }
+
+  function handlePageChange(newPage: number) {
+    setPage(newPage);
+    // 페이지 변경 시 스크롤을 상단으로 이동
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function handleDelete(reviewId: number) {
@@ -106,6 +140,13 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
     }, 500);
   }
 
+  const sortOptions: { value: SortOption; label: string }[] = [
+    { value: "latest", label: "최신순" },
+    { value: "oldest", label: "오래된순" },
+    { value: "ratingHigh", label: "평점 높은순" },
+    { value: "ratingLow", label: "평점 낮은순" },
+  ];
+
   const languageLabels: Record<string, string> = {
     ko: "한국어",
     en: "English",
@@ -136,9 +177,25 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        리뷰 ({reviews.length}개)
-      </h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-gray-900">
+          리뷰 {pagination ? `(${pagination.totalCount}개)` : `(${reviews.length}개)`}
+        </h3>
+        <div className="flex items-center space-x-2">
+          <label className="text-sm text-gray-600">정렬:</label>
+          <select
+            value={sortBy}
+            onChange={(e) => handleSortChange(e.target.value as SortOption)}
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
       {reviews.map((review) => (
         <div
           key={review.id}
@@ -222,6 +279,13 @@ export default function ReviewList({ hospitalId }: ReviewListProps) {
           )}
         </div>
       ))}
+      {pagination && pagination.totalPages > 1 && (
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 }

@@ -13,9 +13,43 @@ export async function GET(
       return NextResponse.json({ error: "Invalid hospital id" }, { status: 400 });
     }
 
+    // 쿼리 파라미터 파싱
+    const { searchParams } = new URL(req.url);
+    const sortBy = searchParams.get("sortBy") || "latest"; // latest, ratingHigh, ratingLow, oldest
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "10", 10);
+    const skip = (page - 1) * limit;
+
+    // 정렬 옵션 설정
+    let orderBy: { createdAt?: "asc" | "desc"; rating?: "asc" | "desc" } = {};
+    switch (sortBy) {
+      case "latest":
+        orderBy = { createdAt: "desc" };
+        break;
+      case "oldest":
+        orderBy = { createdAt: "asc" };
+        break;
+      case "ratingHigh":
+        orderBy = { rating: "desc" };
+        break;
+      case "ratingLow":
+        orderBy = { rating: "asc" };
+        break;
+      default:
+        orderBy = { createdAt: "desc" };
+    }
+
+    // 전체 리뷰 수 조회
+    const totalCount = await prisma.review.count({
+      where: { hospitalId },
+    });
+
+    // 리뷰 조회 (페이지네이션 적용)
     const reviews = await prisma.review.findMany({
       where: { hospitalId },
-      orderBy: { createdAt: "desc" },
+      orderBy,
+      skip,
+      take: limit,
     });
 
     // rating 값을 명시적으로 Number로 변환하여 JSON 직렬화 시 Float가 제대로 전달되도록 함
@@ -24,7 +58,19 @@ export async function GET(
       rating: Number(review.rating),
     }));
 
-    return NextResponse.json({ reviews: reviewsWithNumericRating });
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return NextResponse.json({
+      reviews: reviewsWithNumericRating,
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },
+    });
   } catch (error: any) {
     console.error("리뷰 조회 오류:", error);
     return NextResponse.json(
@@ -57,9 +103,9 @@ export async function POST(
       );
     }
 
-    if (rating < 0 || rating > 5) {
+    if (rating < 0.5 || rating > 5) {
       return NextResponse.json(
-        { error: "평점은 0-5 사이여야 합니다." },
+        { error: "평점은 0.5-5 사이여야 합니다." },
         { status: 400 }
       );
     }

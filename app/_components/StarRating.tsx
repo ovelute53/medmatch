@@ -61,6 +61,9 @@ export default function StarRating({
     const clickX = e.clientX - rect.left;
     const isLeftHalf = allowHalf && clickX < rect.width / 2;
     
+    // 클릭 시 호버 상태 초기화
+    setHoverValue(null);
+    
     if (isLeftHalf) {
       handleClick(starIndex - 0.5);
     } else {
@@ -82,8 +85,14 @@ export default function StarRating({
     }
   }
 
+  function handleContainerMouseLeave() {
+    if (!readonly) {
+      setHoverValue(null);
+    }
+  }
+
   return (
-    <div className="flex items-center space-x-1">
+    <div className="flex items-center space-x-1" onMouseLeave={handleContainerMouseLeave}>
       {Array.from({ length: maxRating }, (_, i) => {
         const starIndex = i + 1;
         const isFilled = starIndex <= Math.floor(displayValue);
@@ -101,7 +110,6 @@ export default function StarRating({
             type="button"
             onClick={(e) => handleStarClick(e, starIndex)}
             onMouseMove={(e) => handleStarMouseMove(e, starIndex)}
-            onMouseLeave={handleMouseLeave}
             disabled={readonly}
             className={`${sizeClasses[size]} transition-all duration-150 ${
               readonly ? "cursor-default" : "cursor-pointer hover:scale-110 active:scale-95"

@@ -72,9 +72,9 @@ export async function PATCH(
     }
 
     // 유효성 검사
-    if (rating !== undefined && (rating < 0 || rating > 5)) {
+    if (rating !== undefined && (rating < 0.5 || rating > 5)) {
       return NextResponse.json(
-        { error: "평점은 0-5 사이여야 합니다." },
+        { error: "평점은 0.5-5 사이여야 합니다." },
         { status: 400 }
       );
     }

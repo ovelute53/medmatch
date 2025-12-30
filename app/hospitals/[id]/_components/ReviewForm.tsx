@@ -12,7 +12,7 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
   const [form, setForm] = useState({
     name: "",
     email: "",
-    rating: 5.0,
+    rating: 0.5,
     title: "",
     content: "",
     language: "ko",
@@ -31,8 +31,8 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
       return;
     }
 
-    if (form.rating < 0 || form.rating > 5) {
-      setMessage({ type: "error", text: "평점은 0-5 사이여야 합니다." });
+    if (form.rating < 0.5 || form.rating > 5) {
+      setMessage({ type: "error", text: "평점은 0.5-5 사이여야 합니다." });
       return;
     }
 
@@ -61,7 +61,7 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
       setForm({
         name: "",
         email: "",
-        rating: 5.0,
+        rating: 0.5,
         title: "",
         content: "",
         language: "ko",
@@ -110,16 +110,19 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          평점 * (0-5점, 0.5점 단위)
+          평점 * (0.5-5점, 0.5점 단위)
         </label>
-        <StarRating
-          value={form.rating}
-          onChange={(rating) => setForm({ ...form, rating })}
-          maxRating={5}
-          allowHalf={true}
-          size="lg"
-          hospitalId={hospitalId}
-        />
+        <div className="mb-1">
+          <StarRating
+            value={form.rating}
+            onChange={(rating) => setForm({ ...form, rating })}
+            maxRating={5}
+            allowHalf={true}
+            size="lg"
+            hospitalId={hospitalId}
+          />
+        </div>
+        <p className="text-xs text-gray-500 mt-1">별의 왼쪽 절반을 클릭하면 0.5점, 오른쪽 절반을 클릭하면 1점씩 선택됩니다.</p>
       </div>
 
       <div>
