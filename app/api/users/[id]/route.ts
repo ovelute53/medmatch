@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireOwnerOrAdmin } from "@/lib/api-auth";
 import bcrypt from "bcryptjs";
 
 export async function GET(
@@ -12,6 +13,12 @@ export async function GET(
 
     if (!Number.isFinite(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+    }
+
+    // 권한 확인: 본인 또는 관리자만 조회 가능
+    const authResult = await requireOwnerOrAdmin(userId);
+    if (!authResult.authorized) {
+      return authResult.response;
     }
 
     const user = await prisma.user.findUnique({
@@ -50,6 +57,12 @@ export async function PATCH(
 
     if (!Number.isFinite(userId)) {
       return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
+    }
+
+    // 권한 확인: 본인 또는 관리자만 수정 가능
+    const authResult = await requireOwnerOrAdmin(userId);
+    if (!authResult.authorized) {
+      return authResult.response;
     }
 
     const body = await req.json();
