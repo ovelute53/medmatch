@@ -26,6 +26,7 @@ model Hospital {
   departments HospitalDepartment[]
   requests    Request[]
   reviews     Review[]
+  favorites   HospitalFavorite[]
 }
 
 model Department {
@@ -71,6 +72,8 @@ model Review {
   id         Int      @id @default(autoincrement())
   hospitalId Int
   hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  userId     Int?     // 로그인한 사용자 ID (선택사항)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   name        String   // 리뷰 작성자 이름
   email       String?  // 이메일 (선택사항)
@@ -85,6 +88,7 @@ model Review {
   reports ReviewReport[]
 
   @@index([hospitalId])
+  @@index([userId])
   @@index([createdAt])
 }
 
@@ -92,6 +96,8 @@ model ReviewReport {
   id         Int      @id @default(autoincrement())
   reviewId   Int
   review     Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  userId     Int?     // 신고한 사용자 ID (선택사항)
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   reason      String   // 신고 사유
   description String?  // 신고 상세 설명
@@ -103,6 +109,38 @@ model ReviewReport {
   updatedAt   DateTime @updatedAt
 
   @@index([reviewId])
+  @@index([userId])
   @@index([status])
   @@index([createdAt])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String   // 해시된 비밀번호
+  role      String   @default("user") // "user" | "admin"
+  image     String?  // 프로필 이미지 URL
+  emailVerified DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews   Review[]
+  reports   ReviewReport[]
+  favorites HospitalFavorite[]
+
+  @@index([email])
+}
+
+model HospitalFavorite {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  hospitalId Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, hospitalId])
+  @@index([userId])
+  @@index([hospitalId])
 }

@@ -6,6 +6,7 @@ import LoadingSpinner from "./_components/LoadingSpinner";
 import ErrorMessage from "./_components/ErrorMessage";
 import EmptyState from "./_components/EmptyState";
 import HighlightText from "./_components/HighlightText";
+import UserMenu from "./_components/UserMenu";
 
 interface Department {
   id: number;
@@ -107,12 +108,7 @@ export default function HomePage() {
               <h1 className="text-3xl font-bold text-gray-900">MedMatch</h1>
               <p className="text-gray-600 mt-1">외국인 환자 맞춤 병원 매칭 플랫폼</p>
             </div>
-            <Link
-              href="/admin"
-              className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900"
-            >
-              관리자
-            </Link>
+            <UserMenu />
           </div>
         </div>
       </header>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import StarRating from "@/app/_components/StarRating";
 
 interface ReviewFormProps {
@@ -9,6 +10,7 @@ interface ReviewFormProps {
 }
 
 export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewFormProps) {
+  const { data: session } = useSession();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -21,6 +23,16 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(
     null
   );
+
+  useEffect(() => {
+    if (session?.user) {
+      setForm((prev) => ({
+        ...prev,
+        name: session.user?.name || prev.name,
+        email: session.user?.email || prev.email,
+      }));
+    }
+  }, [session]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -59,8 +71,8 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
         text: "리뷰가 성공적으로 작성되었습니다!",
       });
       setForm({
-        name: "",
-        email: "",
+        name: session?.user?.name || "",
+        email: session?.user?.email || "",
         rating: 0.5,
         title: "",
         content: "",
@@ -81,32 +93,41 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
     <form onSubmit={handleSubmit} className="space-y-4">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">리뷰 작성</h3>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          이름 *
-        </label>
-        <input
-          type="text"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          placeholder="홍길동"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          required
-        />
-      </div>
+      {!session && (
+        <>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              이름 *
+            </label>
+            <input
+              type="text"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="홍길동"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          이메일 (선택사항)
-        </label>
-        <input
-          type="email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          placeholder="example@email.com"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              이메일 (선택사항)
+            </label>
+            <input
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              placeholder="example@email.com"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </>
+      )}
+      {session && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+          로그인된 사용자: {session.user?.name} ({session.user?.email})
+        </div>
+      )}
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">

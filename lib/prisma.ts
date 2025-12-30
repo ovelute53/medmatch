@@ -27,10 +27,3 @@ if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
   globalForPrisma.prismaAdapter = adapter;
 }
-
-// 개발 환경에서 Prisma Client 모델 확인
-if (process.env.NODE_ENV !== "production" && typeof prisma.review === "undefined") {
-  console.warn(
-    "⚠️  Prisma Client에 review 모델이 없습니다. 개발 서버를 재시작해주세요."
-  );
-}

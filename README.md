@@ -30,11 +30,15 @@ npm install
 
 ### 2. 환경 변수 설정
 
-`.env` 파일을 생성하고 데이터베이스 URL을 설정하세요:
+`.env` 파일을 생성하고 다음 변수들을 설정하세요:
 
 ```env
 DATABASE_URL="file:./prisma/dev.db"
+NEXTAUTH_SECRET="your-secret-key-change-in-production"
+NEXTAUTH_URL="http://localhost:3000"
 ```
+
+**중요**: 프로덕션 환경에서는 `NEXTAUTH_SECRET`을 강력한 랜덤 문자열로 변경하세요.
 
 ### 3. 데이터베이스 마이그레이션
 

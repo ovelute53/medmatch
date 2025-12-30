@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description: "외국인 환자를 위한 다양한 진료과의 병원을 검색하고 매칭받으세요",
 };
 
+import { Providers } from "./providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
