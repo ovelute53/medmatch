@@ -25,6 +25,7 @@ model Hospital {
 
   departments HospitalDepartment[]
   requests    Request[]
+  reviews     Review[]
 }
 
 model Department {
@@ -64,4 +65,23 @@ model Request {
   status      String    @default("new") // "new" | "contacted" | "completed" | "cancelled"
   preferredAt DateTime?
   createdAt   DateTime  @default(now())
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  hospitalId Int
+  hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+
+  name        String   // 리뷰 작성자 이름
+  email       String?  // 이메일 (선택사항)
+  rating      Int      // 평점 (1-5)
+  title       String?  // 리뷰 제목
+  content     String   // 리뷰 내용
+  language    String?  // 작성 언어
+  isVerified  Boolean  @default(false) // 검증된 리뷰 여부
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([hospitalId])
+  @@index([createdAt])
 }

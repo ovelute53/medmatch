@@ -1,0 +1,203 @@
+"use client";
+
+import { useState } from "react";
+
+interface ReviewFormProps {
+  hospitalId: number;
+  onReviewSubmitted: () => void;
+}
+
+export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewFormProps) {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    rating: 5,
+    title: "",
+    content: "",
+    language: "ko",
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(
+    null
+  );
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setMessage(null);
+
+    if (!form.name.trim() || !form.content.trim()) {
+      setMessage({ type: "error", text: "이름과 리뷰 내용은 필수입니다." });
+      return;
+    }
+
+    if (form.rating < 1 || form.rating > 5) {
+      setMessage({ type: "error", text: "평점은 1-5 사이여야 합니다." });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/hospitals/${hospitalId}/reviews`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setMessage({
+          type: "error",
+          text: data.error || "리뷰 작성에 실패했습니다.",
+        });
+        return;
+      }
+
+      setMessage({
+        type: "success",
+        text: "리뷰가 성공적으로 작성되었습니다!",
+      });
+      setForm({
+        name: "",
+        email: "",
+        rating: 5,
+        title: "",
+        content: "",
+        language: "ko",
+      });
+      onReviewSubmitted();
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: "네트워크 오류가 발생했습니다.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">리뷰 작성</h3>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          이름 *
+        </label>
+        <input
+          type="text"
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          placeholder="홍길동"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          이메일 (선택사항)
+        </label>
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          placeholder="example@email.com"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          평점 *
+        </label>
+        <div className="flex items-center space-x-2">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              type="button"
+              onClick={() => setForm({ ...form, rating: star })}
+              className={`text-2xl ${
+                star <= form.rating ? "text-yellow-400" : "text-gray-300"
+              } hover:text-yellow-400 transition-colors`}
+            >
+              ⭐
+            </button>
+          ))}
+          <span className="ml-2 text-sm text-gray-600">{form.rating}점</span>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          제목 (선택사항)
+        </label>
+        <input
+          type="text"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          placeholder="리뷰 제목을 입력하세요"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          리뷰 내용 *
+        </label>
+        <textarea
+          value={form.content}
+          onChange={(e) => setForm({ ...form, content: e.target.value })}
+          placeholder="병원에 대한 리뷰를 작성해주세요..."
+          rows={4}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          작성 언어
+        </label>
+        <select
+          value={form.language}
+          onChange={(e) => setForm({ ...form, language: e.target.value })}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+          <option value="ja">日本語</option>
+        </select>
+      </div>
+
+      {message && (
+        <div
+          className={`p-3 rounded-lg ${
+            message.type === "success"
+              ? "bg-green-50 text-green-800"
+              : "bg-red-50 text-red-800"
+          }`}
+        >
+          {message.text}
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+      >
+        {loading ? (
+          <>
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+            작성 중...
+          </>
+        ) : (
+          "리뷰 작성하기"
+        )}
+      </button>
+    </form>
+  );
+}
+

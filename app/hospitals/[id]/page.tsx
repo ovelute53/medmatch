@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import HospitalRequestForm from "./_components/HospitalRequestForm";
+import ReviewFormWrapper from "./_components/ReviewFormWrapper";
 
 export const dynamic = "force-dynamic";
 
@@ -175,6 +176,11 @@ export default async function HospitalDetail({
                 )}
               </div>
             )}
+
+            {/* 리뷰 섹션 */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <ReviewFormWrapper hospitalId={hospital.id} />
+            </div>
           </div>
 
           {/* 오른쪽: 예약 폼 */}
