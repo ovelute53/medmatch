@@ -186,7 +186,7 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
         // 이미지들을 리뷰에 연결
         for (let i = 0; i < imageUrls.length; i++) {
           try {
-            await fetch(`/api/reviews/${reviewId}/images`, {
+            const imageRes = await fetch(`/api/reviews/${reviewId}/images`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -194,9 +194,19 @@ export default function ReviewForm({ hospitalId, onReviewSubmitted }: ReviewForm
                 order: i,
               }),
             });
-          } catch (error) {
+            
+            if (!imageRes.ok) {
+              const imageError = await imageRes.json();
+              console.error("이미지 연결 오류:", imageError);
+              throw new Error(imageError.error || "이미지 연결에 실패했습니다.");
+            }
+          } catch (error: any) {
             console.error("이미지 연결 오류:", error);
-            // 이미지 연결 실패해도 리뷰는 성공으로 처리
+            // 이미지 연결 실패 시 에러 메시지 표시
+            setMessage({
+              type: "error",
+              text: `리뷰는 작성되었으나 이미지 연결에 실패했습니다: ${error.message}`,
+            });
           }
         }
       }
