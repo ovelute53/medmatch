@@ -13,6 +13,7 @@ import CompareButton from "./_components/CompareButton";
 import Pagination from "./_components/Pagination";
 import SortSelector from "./_components/SortSelector";
 import AdvancedFilters from "./_components/AdvancedFilters";
+import FilterPresets from "./_components/FilterPresets";
 
 interface Department {
   id: number;
@@ -57,6 +58,7 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
+  const [selectedDepartmentIds, setSelectedDepartmentIds] = useState<number[]>([]);
   const [selectedCity, setSelectedCity] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("rating-desc");
@@ -73,7 +75,7 @@ export default function HomePage() {
   useEffect(() => {
     setCurrentPage(1); // 필터 변경 시 첫 페이지로
     loadHospitals();
-  }, [searchQuery, selectedDepartment, selectedCity, sortBy, minRating, maxRating, minReviewCount]);
+  }, [searchQuery, selectedDepartment, selectedDepartmentIds, selectedCity, sortBy, minRating, maxRating, minReviewCount]);
 
   useEffect(() => {
     loadHospitals();
@@ -101,7 +103,12 @@ export default function HomePage() {
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append("search", searchQuery);
-      if (selectedDepartment) params.append("departmentId", selectedDepartment.toString());
+      // 여러 진료과 선택 (우선순위)
+      if (selectedDepartmentIds.length > 0) {
+        selectedDepartmentIds.forEach(id => params.append("departmentIds", id.toString()));
+      } else if (selectedDepartment) {
+        params.append("departmentId", selectedDepartment.toString());
+      }
       if (selectedCity) params.append("city", selectedCity);
       params.append("page", currentPage.toString());
       params.append("limit", "12");
@@ -146,7 +153,40 @@ export default function HomePage() {
     setMinRating(0);
     setMaxRating(5);
     setMinReviewCount(0);
+    setSelectedDepartmentIds([]);
     setCurrentPage(1);
+  }
+
+  function toggleDepartment(deptId: number) {
+    setSelectedDepartmentIds(prev => {
+      if (prev.includes(deptId)) {
+        return prev.filter(id => id !== deptId);
+      } else {
+        return [...prev, deptId];
+      }
+    });
+    // 단일 선택도 초기화
+    setSelectedDepartment(null);
+  }
+
+  function handleApplyPreset(preset: {
+    filters: {
+      minRating?: number;
+      maxRating?: number;
+      minReviewCount?: number;
+    };
+  }) {
+    if (preset.filters.minRating !== undefined) {
+      setMinRating(preset.filters.minRating);
+    }
+    if (preset.filters.maxRating !== undefined) {
+      setMaxRating(preset.filters.maxRating);
+    }
+    if (preset.filters.minReviewCount !== undefined) {
+      setMinReviewCount(preset.filters.minReviewCount);
+    }
+    setCurrentPage(1);
+    setShowAdvancedFilters(true);
   }
 
   const cities = Array.from(new Set(hospitals.map((h) => h.city).filter(Boolean))) as string[];

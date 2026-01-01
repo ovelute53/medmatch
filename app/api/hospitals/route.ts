@@ -5,6 +5,7 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const departmentId = searchParams.get("departmentId");
+    const departmentIds = searchParams.getAll("departmentIds"); // 여러 진료과 선택
     const city = searchParams.get("city");
     const search = searchParams.get("search");
     const page = parseInt(searchParams.get("page") || "1");
@@ -17,7 +18,18 @@ export async function GET(req: Request) {
 
     const where: any = {};
 
-    if (departmentId) {
+    // 여러 진료과 선택 (departmentIds가 우선)
+    if (departmentIds.length > 0) {
+      const ids = departmentIds.map(id => Number(id)).filter(id => !isNaN(id));
+      if (ids.length > 0) {
+        where.departments = {
+          some: {
+            departmentId: { in: ids },
+          },
+        };
+      }
+    } else if (departmentId) {
+      // 하위 호환성을 위해 단일 departmentId도 지원
       where.departments = {
         some: {
           departmentId: Number(departmentId),
