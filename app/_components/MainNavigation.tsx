@@ -9,6 +9,7 @@ export default function MainNavigation() {
   const navItems = [
     { href: "/", label: "홈", icon: "🏠" },
     { href: "/hospitals", label: "병원 찾기", icon: "🏥" },
+    { href: "/map", label: "지도", icon: "🗺️" },
     { href: "/articles", label: "건강 정보", icon: "📰" },
     { href: "/faq", label: "FAQ", icon: "❓" },
     { href: "/qna", label: "Q&A", icon: "💬" },

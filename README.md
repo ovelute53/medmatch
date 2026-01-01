@@ -36,9 +36,13 @@ npm install
 DATABASE_URL="file:./prisma/dev.db"
 NEXTAUTH_SECRET="your-secret-key-change-in-production"
 NEXTAUTH_URL="http://localhost:3000"
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="your-google-maps-api-key"
 ```
 
-**중요**: 프로덕션 환경에서는 `NEXTAUTH_SECRET`을 강력한 랜덤 문자열로 변경하세요.
+**중요**: 
+- 프로덕션 환경에서는 `NEXTAUTH_SECRET`을 강력한 랜덤 문자열로 변경하세요.
+- Google Maps 기능을 사용하려면 `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`를 설정해야 합니다. 
+  - [Google Cloud Console](https://console.cloud.google.com/)에서 Maps JavaScript API를 활성화하고 API 키를 생성하세요.
 
 ### 3. 데이터베이스 마이그레이션
 
