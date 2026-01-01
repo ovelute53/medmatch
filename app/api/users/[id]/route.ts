@@ -61,7 +61,7 @@ export async function PATCH(
 
     // 권한 확인: 본인 또는 관리자만 수정 가능
     const authResult = await requireOwnerOrAdmin(userId);
-    if (!authResult.authorized) {
+    if (!authResult.authorized && authResult.response) {
       return authResult.response;
     }
 
