@@ -7,32 +7,32 @@ datasource db {
 }
 
 model Hospital {
-  id            Int      @id @default(autoincrement())
-  name          String
-  nameEn        String? // 영어 병원명
-  address       String
-  city          String? // 도시
-  country       String   @default("Korea")
-  phone         String?
-  website       String?
-  description   String? // 병원 설명
-  descriptionEn String? // 영어 설명
-  imageUrl      String? // 병원 이미지 URL
-  rating        Float?   @default(0) // 평점 (0-5)
-  reviewCount   Int      @default(0) // 리뷰 수
-  operatingHours String? // 운영 시간 (예: "월-금: 09:00-18:00")
-  operatingHoursEn String? // 운영 시간 (영어)
-  hasParking    Boolean  @default(false) // 주차 가능 여부
-  parkingInfo   String? // 주차 정보 (예: "지하 주차장, 2시간 무료")
-  parkingInfoEn String? // 주차 정보 (영어)
-  isWheelchairAccessible Boolean @default(false) // 휠체어 접근 가능 여부
-  supportedLanguages String? // 지원 언어 (쉼표로 구분, 예: "한국어,영어,중국어,일본어")
-  transportationInfo String? // 교통편 안내 (예: "지하철 2호선 강남역 3번 출구")
-  transportationInfoEn String? // 교통편 안내 (영어)
-  estimatedCost String? // 예상 진료비 (예: "초진: 50,000원")
-  estimatedCostEn String? // 예상 진료비 (영어)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                     Int      @id @default(autoincrement())
+  name                   String
+  nameEn                 String? // 영어 병원명
+  address                String
+  city                   String? // 도시
+  country                String   @default("Korea")
+  phone                  String?
+  website                String?
+  description            String? // 병원 설명
+  descriptionEn          String? // 영어 설명
+  imageUrl               String? // 병원 이미지 URL
+  rating                 Float?   @default(0) // 평점 (0-5)
+  reviewCount            Int      @default(0) // 리뷰 수
+  operatingHours         String? // 운영 시간 (예: "월-금: 09:00-18:00")
+  operatingHoursEn       String? // 운영 시간 (영어)
+  hasParking             Boolean  @default(false) // 주차 가능 여부
+  parkingInfo            String? // 주차 정보 (예: "지하 주차장, 2시간 무료")
+  parkingInfoEn          String? // 주차 정보 (영어)
+  isWheelchairAccessible Boolean  @default(false) // 휠체어 접근 가능 여부
+  supportedLanguages     String? // 지원 언어 (쉼표로 구분, 예: "한국어,영어,중국어,일본어")
+  transportationInfo     String? // 교통편 안내 (예: "지하철 2호선 강남역 3번 출구")
+  transportationInfoEn   String? // 교통편 안내 (영어)
+  estimatedCost          String? // 예상 진료비 (예: "초진: 50,000원")
+  estimatedCostEn        String? // 예상 진료비 (영어)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
 
   departments HospitalDepartment[]
   requests    Request[]
@@ -83,21 +83,21 @@ model Review {
   id         Int      @id @default(autoincrement())
   hospitalId Int
   hospital   Hospital @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
-  userId     Int?     // 로그인한 사용자 ID (선택사항)
+  userId     Int? // 로그인한 사용자 ID (선택사항)
   user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  name        String   // 리뷰 작성자 이름
-  email       String?  // 이메일 (선택사항)
-  rating      Float    // 평점 (0-5, 0.5 단위)
-  title       String?  // 리뷰 제목
-  content     String   // 리뷰 내용
-  language    String?  // 작성 언어
-  isVerified  Boolean  @default(false) // 검증된 리뷰 여부
-  likeCount   Int      @default(0) // 좋아요 수
-  dislikeCount Int     @default(0) // 싫어요 수
-  commentCount Int     @default(0) // 댓글 수
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  name         String // 리뷰 작성자 이름
+  email        String? // 이메일 (선택사항)
+  rating       Float // 평점 (0-5, 0.5 단위)
+  title        String? // 리뷰 제목
+  content      String // 리뷰 내용
+  language     String? // 작성 언어
+  isVerified   Boolean  @default(false) // 검증된 리뷰 여부
+  likeCount    Int      @default(0) // 좋아요 수
+  dislikeCount Int      @default(0) // 싫어요 수
+  commentCount Int      @default(0) // 댓글 수
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   reports  ReviewReport[]
   likes    ReviewLike[]
@@ -111,20 +111,20 @@ model Review {
 }
 
 model ReviewReport {
-  id         Int      @id @default(autoincrement())
-  reviewId   Int
-  review     Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  userId     Int?     // 신고한 사용자 ID (선택사항)
-  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  id       Int    @id @default(autoincrement())
+  reviewId Int
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  userId   Int? // 신고한 사용자 ID (선택사항)
+  user     User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  reason      String   // 신고 사유
-  description String?  // 신고 상세 설명
-  reporterName String? // 신고자 이름 (선택사항)
+  reason        String // 신고 사유
+  description   String? // 신고 상세 설명
+  reporterName  String? // 신고자 이름 (선택사항)
   reporterEmail String? // 신고자 이메일 (선택사항)
-  status      String   @default("pending") // "pending" | "reviewed" | "resolved" | "dismissed"
-  adminNote   String?  // 관리자 메모
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  status        String   @default("pending") // "pending" | "reviewed" | "resolved" | "dismissed"
+  adminNote     String? // 관리자 메모
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@index([reviewId])
   @@index([userId])
@@ -133,15 +133,15 @@ model ReviewReport {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String
-  password  String   // 해시된 비밀번호
-  role      String   @default("user") // "user" | "admin"
-  image     String?  // 프로필 이미지 URL
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  name          String
+  password      String // 해시된 비밀번호
+  role          String    @default("user") // "user" | "admin"
+  image         String? // 프로필 이미지 URL
   emailVerified DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   reviews        Review[]
   reports        ReviewReport[]
@@ -173,7 +173,7 @@ model ReviewLike {
   review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   userId    Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  isLike    Boolean  // true: 좋아요, false: 싫어요
+  isLike    Boolean // true: 좋아요, false: 싫어요
   createdAt DateTime @default(now())
 
   @@unique([reviewId, userId])
@@ -187,8 +187,8 @@ model ReviewImage {
   id        Int      @id @default(autoincrement())
   reviewId  Int
   review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  imageUrl  String   // 이미지 URL
-  caption   String?  // 이미지 설명
+  imageUrl  String // 이미지 URL
+  caption   String? // 이미지 설명
   order     Int      @default(0) // 이미지 순서
   createdAt DateTime @default(now())
 
@@ -198,17 +198,17 @@ model ReviewImage {
 
 // 리뷰 댓글 (답글)
 model ReviewComment {
-  id        Int      @id @default(autoincrement())
-  reviewId  Int
-  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  userId    Int?     // 댓글 작성자 ID (선택사항)
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  
-  authorName String  // 작성자 이름
-  content    String  // 댓글 내용
-  isHospitalReply Boolean @default(false) // 병원 측 답변 여부
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id       Int    @id @default(autoincrement())
+  reviewId Int
+  review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  userId   Int? // 댓글 작성자 ID (선택사항)
+  user     User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  authorName      String // 작성자 이름
+  content         String // 댓글 내용
+  isHospitalReply Boolean  @default(false) // 병원 측 답변 여부
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([reviewId])
   @@index([userId])
@@ -218,21 +218,21 @@ model ReviewComment {
 
 // 건강 정보 게시글
 model Article {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
-  titleEn     String?  // 영어 제목
-  content     String   // 본문 내용
-  contentEn   String?  // 영어 본문
-  summary     String?  // 요약
-  summaryEn   String?  // 영어 요약
-  category    String   @default("general") // "general", "disease", "treatment", "prevention"
-  imageUrl    String?  // 대표 이미지
-  author      String?  // 작성자 (관리자 또는 의료진)
-  viewCount   Int      @default(0) // 조회수
-  isPublished Boolean  @default(false) // 게시 여부
+  titleEn     String? // 영어 제목
+  content     String // 본문 내용
+  contentEn   String? // 영어 본문
+  summary     String? // 요약
+  summaryEn   String? // 영어 요약
+  category    String    @default("general") // "general", "disease", "treatment", "prevention"
+  imageUrl    String? // 대표 이미지
+  author      String? // 작성자 (관리자 또는 의료진)
+  viewCount   Int       @default(0) // 조회수
+  isPublished Boolean   @default(false) // 게시 여부
   publishedAt DateTime? // 게시일
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   tags ArticleTag[]
 
@@ -247,7 +247,7 @@ model ArticleTag {
   id        Int      @id @default(autoincrement())
   articleId Int
   article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  tag       String   // 태그명 (예: "감기", "예방", "치료")
+  tag       String // 태그명 (예: "감기", "예방", "치료")
   createdAt DateTime @default(now())
 
   @@unique([articleId, tag])
@@ -256,16 +256,16 @@ model ArticleTag {
 
 // FAQ
 model FAQ {
-  id        Int      @id @default(autoincrement())
-  question  String   // 질문 (한국어)
+  id         Int      @id @default(autoincrement())
+  question   String // 질문 (한국어)
   questionEn String? // 질문 (영어)
-  answer    String   // 답변 (한국어)
-  answerEn  String?  // 답변 (영어)
-  category  String   @default("general") // "general", "reservation", "treatment", "payment"
-  order     Int      @default(0) // 정렬 순서
-  viewCount Int      @default(0) // 조회수
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  answer     String // 답변 (한국어)
+  answerEn   String? // 답변 (영어)
+  category   String   @default("general") // "general", "reservation", "treatment", "payment"
+  order      Int      @default(0) // 정렬 순서
+  viewCount  Int      @default(0) // 조회수
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([category])
   @@index([order])
@@ -273,23 +273,23 @@ model FAQ {
 
 // 실시간 Q&A
 model QnA {
-  id          Int      @id @default(autoincrement())
-  userId      Int?     // 질문자 ID (선택사항)
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  
-  title       String   // 질문 제목
-  content     String   // 질문 내용
-  category    String   @default("general") // "general", "hospital", "treatment", "reservation"
-  status      String   @default("pending") // "pending", "answered", "closed"
-  viewCount   Int      @default(0) // 조회수
-  
+  id     Int   @id @default(autoincrement())
+  userId Int? // 질문자 ID (선택사항)
+  user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  title     String // 질문 제목
+  content   String // 질문 내용
+  category  String @default("general") // "general", "hospital", "treatment", "reservation"
+  status    String @default("pending") // "pending", "answered", "closed"
+  viewCount Int    @default(0) // 조회수
+
   // 답변 정보
-  answeredBy  String?  // 답변자 (관리자/의료진 이름)
-  answer      String?  // 답변 내용
-  answeredAt  DateTime? // 답변일
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  answeredBy String? // 답변자 (관리자/의료진 이름)
+  answer     String? // 답변 내용
+  answeredAt DateTime? // 답변일
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([status])
