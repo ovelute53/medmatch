@@ -61,7 +61,7 @@ export default async function AdminPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Link
             href="/admin/hospitals/new"
             className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
@@ -89,6 +89,21 @@ export default async function AdminPage() {
                 <p className="text-gray-600">새로운 진료과를 등록합니다.</p>
               </div>
               <span className="text-4xl">💊</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/admin/faq"
+            className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  FAQ 관리
+                </h2>
+                <p className="text-gray-600">자주 묻는 질문을 관리합니다.</p>
+              </div>
+              <span className="text-4xl">❓</span>
             </div>
           </Link>
 
