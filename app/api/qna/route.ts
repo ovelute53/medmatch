@@ -79,7 +79,7 @@ export async function POST(req: Request) {
         title,
         content,
         category,
-        userId: session?.user?.id ? Number(session.user.id) : null,
+        userId: (session?.user as any)?.id ? Number((session.user as any).id) : null,
       },
     });
 
