@@ -14,11 +14,8 @@ export async function POST(
   try {
     // 로그인 확인
     const authResult = await requireAuth();
-    if (!authResult.authorized) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
+    if (!authResult.authorized && authResult.response) {
+      return authResult.response;
     }
 
     const userIdStr = authResult.user!.id;

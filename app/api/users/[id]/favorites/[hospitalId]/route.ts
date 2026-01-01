@@ -17,8 +17,8 @@ export async function DELETE(
     }
 
     const authResult = await requireOwnerOrAdmin(userId);
-    if (!authResult.authorized) {
-      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+    if (!authResult.authorized && authResult.response) {
+      return authResult.response;
     }
 
     const favorite = await prisma.hospitalFavorite.findUnique({
@@ -66,8 +66,8 @@ export async function GET(
     }
 
     const authResult = await requireOwnerOrAdmin(userId);
-    if (!authResult.authorized) {
-      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+    if (!authResult.authorized && authResult.response) {
+      return authResult.response;
     }
 
     const favorite = await prisma.hospitalFavorite.findUnique({

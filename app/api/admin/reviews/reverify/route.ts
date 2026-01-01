@@ -10,11 +10,8 @@ export async function POST(req: Request) {
   try {
     // 관리자 권한 확인
     const authResult = await requireAdmin();
-    if (!authResult.authorized) {
-      return NextResponse.json(
-        { error: authResult.error },
-        { status: authResult.status }
-      );
+    if (!authResult.authorized && authResult.response) {
+      return authResult.response;
     }
 
     const result = await reVerifyAllReviews();
