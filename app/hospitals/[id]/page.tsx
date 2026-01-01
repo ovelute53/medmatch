@@ -6,6 +6,7 @@ import ReviewFormWrapper from "./_components/ReviewFormWrapper";
 import FavoriteButton from "./_components/FavoriteButton";
 import RecentHospitalTracker from "./_components/RecentHospitalTracker";
 import HospitalDetails from "../../_components/HospitalDetails";
+import HospitalImage from "../../_components/HospitalImage";
 
 export const dynamic = "force-dynamic";
 
