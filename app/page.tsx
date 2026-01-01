@@ -201,11 +201,11 @@ export default function HomePage() {
               <div className="relative">
                 <div className="absolute inset-0 bg-primary-600 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity"></div>
                 <div className="relative bg-gradient-to-br from-primary-600 to-primary-700 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-xl">M</span>
+                  <span className="text-white font-bold text-xl">S</span>
                 </div>
               </div>
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold gradient-text">MedMatch</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold gradient-text">SeoulGigibae</h1>
                 <p className="text-gray-600 text-xs sm:text-sm mt-0.5">외국인 환자 맞춤 병원 매칭 플랫폼</p>
               </div>
             </Link>
