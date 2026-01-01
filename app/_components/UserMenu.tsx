@@ -20,16 +20,16 @@ export default function UserMenu() {
 
   if (!session) {
     return (
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-3">
         <Link
           href="/auth/signin"
-          className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+          className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors"
         >
           로그인
         </Link>
         <Link
           href="/auth/register"
-          className="px-4 py-2 text-sm font-medium text-white bg-burgundy-700 rounded-lg hover:bg-burgundy-800 shadow-md"
+          className="px-5 py-2 text-sm font-semibold text-white bg-primary-600 rounded-xl hover:bg-primary-700 shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
         >
           회원가입
         </Link>
@@ -41,11 +41,11 @@ export default function UserMenu() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-gray-100"
+        className="flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-900 rounded-xl hover:bg-gray-100 transition-all duration-200 border border-gray-200 hover:border-gray-300"
       >
         <span>{session.user?.name || session.user?.email}</span>
         {session.user?.role === "admin" && (
-          <span className="px-2 py-0.5 text-xs bg-purple-100 text-purple-800 rounded">
+          <span className="px-2.5 py-0.5 text-xs font-bold bg-purple-100 text-purple-700 rounded-lg border border-purple-200">
             관리자
           </span>
         )}
@@ -70,10 +70,10 @@ export default function UserMenu() {
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-20">
+          <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl py-2 z-20 border border-gray-100">
             <Link
               href="/profile"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 font-medium transition-colors rounded-lg mx-1"
               onClick={() => setIsOpen(false)}
             >
               프로필
@@ -81,12 +81,13 @@ export default function UserMenu() {
             {session.user?.role === "admin" && (
               <Link
                 href="/admin"
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 font-medium transition-colors rounded-lg mx-1"
                 onClick={() => setIsOpen(false)}
               >
                 관리자 페이지
               </Link>
             )}
+            <div className="border-t border-gray-100 my-1"></div>
             <button
               onClick={async () => {
                 setIsOpen(false);
@@ -103,7 +104,7 @@ export default function UserMenu() {
                   window.location.href = "/";
                 }
               }}
-              className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium"
+              className="block w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 font-semibold transition-colors rounded-lg mx-1"
             >
               로그아웃
             </button>

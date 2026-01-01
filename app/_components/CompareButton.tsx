@@ -70,13 +70,13 @@ export default function CompareButton({ hospital }: CompareButtonProps) {
       onClick={handleToggle}
       disabled={!isAdded && !canAdd}
       className={`
-        px-3 py-1.5 rounded-lg text-sm font-medium transition-all
+        px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200
         ${
           isAdded
-            ? "bg-blue-600 text-white hover:bg-blue-700"
-            : "bg-white text-gray-700 border-2 border-gray-300 hover:border-blue-500 hover:text-blue-600"
+            ? "bg-primary-600 text-white hover:bg-primary-700 shadow-md shadow-primary-200"
+            : "bg-white text-gray-700 border-2 border-gray-200 hover:border-primary-500 hover:text-primary-600 hover:bg-primary-50"
         }
-        disabled:opacity-50 disabled:cursor-not-allowed
+        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-200 disabled:hover:text-gray-700 disabled:hover:bg-white
       `}
     >
       {isAdded ? "비교 제거" : "비교하기"}

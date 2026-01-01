@@ -84,13 +84,13 @@ export default function FavoriteButton({ hospitalId }: FavoriteButtonProps) {
       onClick={toggleFavorite}
       disabled={loading}
       className={`
-        flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all
+        flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold transition-all duration-200
         ${
           isFavorite
-            ? "bg-red-500 text-white hover:bg-red-600"
-            : "bg-white text-gray-700 border-2 border-gray-300 hover:border-red-500 hover:text-red-500"
+            ? "bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 shadow-md hover:shadow-lg hover:-translate-y-0.5"
+            : "bg-white text-gray-700 border-2 border-gray-200 hover:border-red-400 hover:text-red-600 hover:bg-red-50"
         }
-        disabled:opacity-50 disabled:cursor-not-allowed
+        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-gray-200 disabled:hover:text-gray-700 disabled:hover:bg-white
       `}
     >
       <svg

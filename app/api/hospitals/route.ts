@@ -11,6 +11,9 @@ export async function GET(req: Request) {
     const limit = parseInt(searchParams.get("limit") || "12");
     const sortBy = searchParams.get("sortBy") || "rating"; // rating, reviewCount, name, createdAt
     const sortOrder = searchParams.get("sortOrder") || "desc"; // asc, desc
+    const minRating = searchParams.get("minRating");
+    const maxRating = searchParams.get("maxRating");
+    const minReviewCount = searchParams.get("minReviewCount");
 
     const where: any = {};
 
@@ -34,6 +37,27 @@ export async function GET(req: Request) {
         { description: { contains: search } },
         { descriptionEn: { contains: search } },
       ];
+    }
+
+    // 평점 범위 필터 (평점이 null이 아닌 경우만)
+    if (minRating || maxRating) {
+      const ratingFilter: any = {
+        not: null, // 평점이 null이 아닌 경우만
+      };
+      if (minRating) {
+        ratingFilter.gte = parseFloat(minRating);
+      }
+      if (maxRating) {
+        ratingFilter.lte = parseFloat(maxRating);
+      }
+      where.rating = ratingFilter;
+    }
+
+    // 최소 리뷰 수 필터
+    if (minReviewCount) {
+      where.reviewCount = {
+        gte: parseInt(minReviewCount),
+      };
     }
 
     // 정렬 옵션 (Prisma는 배열을 요구합니다)

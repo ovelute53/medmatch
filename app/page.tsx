@@ -12,6 +12,7 @@ import SearchInput from "./_components/SearchInput";
 import CompareButton from "./_components/CompareButton";
 import Pagination from "./_components/Pagination";
 import SortSelector from "./_components/SortSelector";
+import AdvancedFilters from "./_components/AdvancedFilters";
 
 interface Department {
   id: number;
@@ -60,6 +61,10 @@ export default function HomePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("rating-desc");
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
+  const [minRating, setMinRating] = useState(0);
+  const [maxRating, setMaxRating] = useState(5);
+  const [minReviewCount, setMinReviewCount] = useState(0);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   useEffect(() => {
     loadDepartments();
@@ -68,7 +73,7 @@ export default function HomePage() {
   useEffect(() => {
     setCurrentPage(1); // 필터 변경 시 첫 페이지로
     loadHospitals();
-  }, [searchQuery, selectedDepartment, selectedCity, sortBy]);
+  }, [searchQuery, selectedDepartment, selectedCity, sortBy, minRating, maxRating, minReviewCount]);
 
   useEffect(() => {
     loadHospitals();
@@ -105,6 +110,11 @@ export default function HomePage() {
       const [sortField, sortOrder] = sortBy.split("-");
       params.append("sortBy", sortField);
       params.append("sortOrder", sortOrder);
+      
+      // 고급 필터 파라미터
+      if (minRating > 0) params.append("minRating", minRating.toString());
+      if (maxRating < 5) params.append("maxRating", maxRating.toString());
+      if (minReviewCount > 0) params.append("minReviewCount", minReviewCount.toString());
 
       const res = await fetch(`/api/hospitals?${params.toString()}`);
       if (!res.ok) {
@@ -130,6 +140,13 @@ export default function HomePage() {
   function handlePageChange(page: number) {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleResetFilters() {
+    setMinRating(0);
+    setMaxRating(5);
+    setMinReviewCount(0);
+    setCurrentPage(1);
   }
 
   const cities = Array.from(new Set(hospitals.map((h) => h.city).filter(Boolean))) as string[];
@@ -239,6 +256,43 @@ export default function HomePage() {
                   ))}
                 </select>
               </div>
+            </div>
+
+            {/* 고급 필터 */}
+            <div className="mt-4">
+              <button
+                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                className="flex items-center gap-2 text-sm font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+              >
+                <svg
+                  className={`w-5 h-5 transition-transform ${showAdvancedFilters ? "rotate-180" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                상세 필터
+                {(minRating > 0 || maxRating < 5 || minReviewCount > 0) && (
+                  <span className="bg-primary-600 text-white text-xs px-2 py-0.5 rounded-full">
+                    활성
+                  </span>
+                )}
+              </button>
+              
+              {showAdvancedFilters && (
+                <div className="mt-4">
+                  <AdvancedFilters
+                    minRating={minRating}
+                    maxRating={maxRating}
+                    minReviewCount={minReviewCount}
+                    onMinRatingChange={setMinRating}
+                    onMaxRatingChange={setMaxRating}
+                    onMinReviewCountChange={setMinReviewCount}
+                    onReset={handleResetFilters}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

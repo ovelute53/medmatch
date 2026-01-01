@@ -1,0 +1,25 @@
+{
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": ["variable.other.constant", "variable.parameter", "comment"],
+        "settings": {
+          "fontStyle": ""
+        }
+      },
+      {
+        "scope": ["variable.parameter"],
+        "settings": {
+          "foreground": "#f7f56c"
+        }
+      },
+      {
+        "scope": ["variable.other.constant"],
+        "settings": {
+          "foreground": "#F07178"
+        }
+      }
+    ],
+    "comments": "#16bda7"
+  }
+}

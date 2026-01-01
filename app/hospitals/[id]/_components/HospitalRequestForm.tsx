@@ -76,15 +76,15 @@ export default function HospitalRequestForm({ hospitalId }: HospitalRequestFormP
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
           문의 유형 *
         </label>
         <select
           value={form.type}
           onChange={(e) => setForm({ ...form, type: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white text-gray-900 font-medium"
         >
           <option value="inquiry">일반 문의</option>
           <option value="reservation">예약 문의</option>
@@ -92,7 +92,7 @@ export default function HospitalRequestForm({ hospitalId }: HospitalRequestFormP
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
           이름 *
         </label>
         <input
@@ -100,13 +100,13 @@ export default function HospitalRequestForm({ hospitalId }: HospitalRequestFormP
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           placeholder="홍길동"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 placeholder:text-gray-400"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
           전화번호 *
         </label>
         <input
@@ -114,13 +114,13 @@ export default function HospitalRequestForm({ hospitalId }: HospitalRequestFormP
           value={form.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
           placeholder="010-1234-5678"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 placeholder:text-gray-400"
           required
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
           이메일
         </label>
         <input
@@ -128,18 +128,18 @@ export default function HospitalRequestForm({ hospitalId }: HospitalRequestFormP
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
           placeholder="example@email.com"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 placeholder:text-gray-400"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
           선호 언어
         </label>
         <select
           value={form.language}
           onChange={(e) => setForm({ ...form, language: e.target.value })}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white text-gray-900 font-medium"
         >
           <option value="ko">한국어</option>
           <option value="en">English</option>
@@ -150,20 +150,20 @@ export default function HospitalRequestForm({ hospitalId }: HospitalRequestFormP
 
       {form.type === "reservation" && (
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
             희망 일시
           </label>
           <input
             type="datetime-local"
             value={form.preferredAt}
             onChange={(e) => setForm({ ...form, preferredAt: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
           />
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
           문의 내용
         </label>
         <textarea
@@ -171,16 +171,16 @@ export default function HospitalRequestForm({ hospitalId }: HospitalRequestFormP
           onChange={(e) => setForm({ ...form, message: e.target.value })}
           placeholder="문의하실 내용을 입력해주세요..."
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 placeholder:text-gray-400 resize-none"
         />
       </div>
 
       {message && (
         <div
-          className={`p-3 rounded-lg ${
+          className={`p-4 rounded-xl font-medium ${
             message.type === "success"
-              ? "bg-green-50 text-green-800"
-              : "bg-red-50 text-red-800"
+              ? "bg-green-50 text-green-800 border-2 border-green-200"
+              : "bg-red-50 text-red-800 border-2 border-red-200"
           }`}
         >
           {message.text}
@@ -190,11 +190,11 @@ export default function HospitalRequestForm({ hospitalId }: HospitalRequestFormP
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+        className="w-full bg-primary-600 text-white py-3.5 rounded-xl font-semibold hover:bg-primary-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-md hover:shadow-lg hover:-translate-y-0.5 disabled:hover:translate-y-0"
       >
         {loading ? (
           <>
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+            <div className="animate-spin rounded-full h-5 w-5 border-4 border-white border-t-transparent mr-2"></div>
             전송 중...
           </>
         ) : (

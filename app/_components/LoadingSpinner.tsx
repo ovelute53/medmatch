@@ -14,11 +14,11 @@ export default function LoadingSpinner({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-8">
+    <div className="flex flex-col items-center justify-center py-12">
       <div
-        className={`${sizeClasses[size]} animate-spin rounded-full border-b-2 border-blue-600`}
+        className={`${sizeClasses[size]} animate-spin rounded-full border-4 border-primary-100 border-t-primary-600`}
       ></div>
-      {text && <p className="mt-4 text-gray-600">{text}</p>}
+      {text && <p className="mt-5 text-gray-600 font-medium">{text}</p>}
     </div>
   );
 }
