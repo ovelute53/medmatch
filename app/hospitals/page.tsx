@@ -58,29 +58,13 @@ export default async function HospitalsPage() {
                 href={`/hospitals/${hospital.id}`}
                 className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group border border-gray-100 hover:border-primary-200 hover:-translate-y-1"
               >
-                {hospital.imageUrl && (
-                  <div className="h-48 sm:h-56 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
-                    <img
-                      src={hospital.imageUrl}
-                      alt={hospital.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        const parent = target.parentElement;
-                        if (parent) {
-                          parent.innerHTML = '<div class="h-48 sm:h-56 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center"><span class="text-6xl">🏥</span></div>';
-                        }
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-                )}
-                {!hospital.imageUrl && (
-                  <div className="h-48 sm:h-56 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
-                    <span className="text-6xl">🏥</span>
-                  </div>
-                )}
+                <div className="h-48 sm:h-56 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden relative">
+                  <HospitalCardImage
+                    imageUrl={hospital.imageUrl}
+                    name={hospital.name}
+                    heightClass="h-48 sm:h-56"
+                  />
+                </div>
                 <div className="p-5 sm:p-6">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors line-clamp-1 flex-1">

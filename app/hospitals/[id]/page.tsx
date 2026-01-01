@@ -59,28 +59,10 @@ export default async function HospitalDetail({
           <div className="lg:col-span-2 space-y-6">
             {/* 병원 이미지 */}
             <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
-              {hospital.imageUrl ? (
-                <img
-                  src={hospital.imageUrl}
-                  alt={hospital.name}
-                  className="w-full h-64 md:h-96 object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const parent = target.parentElement;
-                    if (parent && !parent.querySelector('.fallback-image')) {
-                      const fallback = document.createElement('div');
-                      fallback.className = 'fallback-image bg-gradient-to-br from-primary-100 to-primary-200 h-64 md:h-96 flex items-center justify-center';
-                      fallback.innerHTML = '<span class="text-8xl">🏥</span>';
-                      parent.appendChild(fallback);
-                    }
-                  }}
-                />
-              ) : (
-                <div className="bg-gradient-to-br from-primary-100 to-primary-200 h-64 md:h-96 flex items-center justify-center">
-                  <span className="text-8xl">🏥</span>
-                </div>
-              )}
+              <HospitalImage
+                imageUrl={hospital.imageUrl}
+                name={hospital.name}
+              />
             </div>
 
             {/* 병원 기본 정보 */}
