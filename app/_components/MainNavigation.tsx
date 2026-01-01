@@ -11,6 +11,7 @@ export default function MainNavigation() {
     { href: "/hospitals", label: "병원 찾기", icon: "🏥" },
     { href: "/articles", label: "건강 정보", icon: "📰" },
     { href: "/faq", label: "FAQ", icon: "❓" },
+    { href: "/qna", label: "Q&A", icon: "💬" },
     { href: "/compare", label: "비교하기", icon: "⚖️" },
   ];
 

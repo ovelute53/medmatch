@@ -8,6 +8,7 @@ import {
   clearSearchHistory,
   type SearchHistoryItem,
 } from "@/lib/search-history";
+import { useRouter } from "next/navigation";
 
 interface SearchInputProps {
   value: string;
@@ -15,10 +16,22 @@ interface SearchInputProps {
   placeholder?: string;
 }
 
+interface Suggestion {
+  id: number;
+  text: string;
+  subtext?: string;
+  type: "hospital";
+}
+
 export default function SearchInput({ value, onChange, placeholder }: SearchInputProps) {
+  const router = useRouter();
   const [history, setHistory] = useState<SearchHistoryItem[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // 컴포넌트 마운트 시 검색 기록 로드
@@ -28,6 +41,7 @@ export default function SearchInput({ value, onChange, placeholder }: SearchInpu
     function handleClickOutside(event: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
         setShowHistory(false);
+        setShowSuggestions(false);
       }
     }
 
@@ -35,8 +49,43 @@ export default function SearchInput({ value, onChange, placeholder }: SearchInpu
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // 자동완성 검색
+  useEffect(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    if (value.trim().length >= 2) {
+      debounceTimerRef.current = setTimeout(async () => {
+        setLoadingSuggestions(true);
+        try {
+          const res = await fetch(`/api/search/autocomplete?q=${encodeURIComponent(value.trim())}`);
+          if (res.ok) {
+            const data = await res.json();
+            setSuggestions(data.suggestions || []);
+            setShowSuggestions(true);
+          }
+        } catch (error) {
+          console.error("자동완성 검색 실패:", error);
+        } finally {
+          setLoadingSuggestions(false);
+        }
+      }, 300);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, [value]);
+
   function handleInputChange(newValue: string) {
     onChange(newValue);
+    setShowHistory(false);
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -45,6 +94,16 @@ export default function SearchInput({ value, onChange, placeholder }: SearchInpu
       addSearchHistory(value);
       setHistory(getSearchHistory());
       setShowHistory(false);
+      setShowSuggestions(false);
+    }
+  }
+
+  function handleFocus() {
+    if (history.length > 0) {
+      setShowHistory(true);
+    }
+    if (suggestions.length > 0) {
+      setShowSuggestions(true);
     }
   }
 
@@ -53,6 +112,23 @@ export default function SearchInput({ value, onChange, placeholder }: SearchInpu
     addSearchHistory(query);
     setHistory(getSearchHistory());
     setShowHistory(false);
+    setShowSuggestions(false);
+  }
+
+  function handleSuggestionClick(suggestion: Suggestion) {
+    if (suggestion.type === "hospital") {
+      router.push(`/hospitals/${suggestion.id}`);
+      addSearchHistory(suggestion.text);
+      setHistory(getSearchHistory());
+      setShowSuggestions(false);
+      setShowHistory(false);
+    } else {
+      onChange(suggestion.text);
+      addSearchHistory(suggestion.text);
+      setHistory(getSearchHistory());
+      setShowSuggestions(false);
+      setShowHistory(false);
+    }
   }
 
   function handleRemoveHistory(query: string, e: React.MouseEvent) {
@@ -75,7 +151,7 @@ export default function SearchInput({ value, onChange, placeholder }: SearchInpu
           value={value}
           onChange={(e) => handleInputChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          onFocus={() => history.length > 0 && setShowHistory(true)}
+          onFocus={handleFocus}
           className="w-full px-4 sm:px-5 py-3.5 pr-12 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white text-gray-900 placeholder:text-gray-400 font-medium shadow-sm hover:border-gray-300"
         />
         <svg
