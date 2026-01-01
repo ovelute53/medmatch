@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, ReactNode } from "react";
+import React, { useEffect, ReactNode } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 
 type UserRole = "user" | "admin";
@@ -74,14 +74,14 @@ export function RoleGuard({
 
   // 로그인 안 됨
   if (status === "unauthenticated") {
-    return fallback as JSX.Element;
+    return fallback as React.ReactElement;
   }
 
   // 권한 없음
   if (requiredRole && session?.user) {
     const userRole = (session.user as any).role;
     if (userRole !== requiredRole) {
-      return fallback as JSX.Element;
+      return fallback as React.ReactElement;
     }
   }
 
@@ -106,14 +106,14 @@ export function ShowForRole({ children, role, fallback = null }: ShowForRoleProp
   const { data: session, status } = useSession();
 
   if (status === "loading") return null;
-  if (!session) return fallback as JSX.Element;
+  if (!session) return fallback as React.ReactElement;
 
   const userRole = (session.user as any).role;
   if (userRole === role) {
     return <>{children}</>;
   }
 
-  return fallback as JSX.Element;
+  return fallback as React.ReactElement;
 }
 
 /**
@@ -134,7 +134,7 @@ export function ShowWhenAuthenticated({ children, fallback = null }: { children:
     return <>{children}</>;
   }
 
-  return fallback as JSX.Element;
+  return fallback as React.ReactElement;
 }
 
 /**
