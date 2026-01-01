@@ -15,6 +15,7 @@ import SortSelector from "./_components/SortSelector";
 import AdvancedFilters from "./_components/AdvancedFilters";
 import FilterPresets from "./_components/FilterPresets";
 import MainNavigation from "./_components/MainNavigation";
+import HospitalCardImage from "./_components/HospitalCardImage";
 
 interface Department {
   id: number;

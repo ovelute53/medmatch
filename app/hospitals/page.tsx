@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import EmptyState from "../_components/EmptyState";
+import HospitalCardImage from "../_components/HospitalCardImage";
 
 export const dynamic = "force-dynamic";
 
