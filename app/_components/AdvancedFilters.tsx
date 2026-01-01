@@ -53,11 +53,19 @@ export default function AdvancedFilters({
                 <input
                   type="range"
                   min="0"
-                  max="5"
+                  max={maxRating}
                   step="0.5"
                   value={minRating}
-                  onChange={(e) => onMinRatingChange(parseFloat(e.target.value))}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value <= maxRating) {
+                      onMinRatingChange(value);
+                    }
+                  }}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-600"
+                  style={{
+                    background: `linear-gradient(to right, rgb(61, 94, 255) 0%, rgb(61, 94, 255) ${(minRating / 5) * 100}%, rgb(229, 231, 235) ${(minRating / 5) * 100}%, rgb(229, 231, 235) 100%)`
+                  }}
                 />
                 <div className="flex justify-between text-xs text-gray-400 mt-1">
                   <span>0</span>
@@ -73,12 +81,20 @@ export default function AdvancedFilters({
                 </div>
                 <input
                   type="range"
-                  min="0"
+                  min={minRating}
                   max="5"
                   step="0.5"
                   value={maxRating}
-                  onChange={(e) => onMaxRatingChange(parseFloat(e.target.value))}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (value >= minRating) {
+                      onMaxRatingChange(value);
+                    }
+                  }}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-600"
+                  style={{
+                    background: `linear-gradient(to right, rgb(229, 231, 235) 0%, rgb(229, 231, 235) ${(maxRating / 5) * 100}%, rgb(61, 94, 255) ${(maxRating / 5) * 100}%, rgb(61, 94, 255) 100%)`
+                  }}
                 />
                 <div className="flex justify-between text-xs text-gray-400 mt-1">
                   <span>0</span>

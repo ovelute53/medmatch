@@ -39,18 +39,19 @@ export async function GET(req: Request) {
       ];
     }
 
-    // 평점 범위 필터 (평점이 null이 아닌 경우만)
+    // 평점 범위 필터
     if (minRating || maxRating) {
-      const ratingFilter: any = {
-        not: null, // 평점이 null이 아닌 경우만
-      };
+      where.rating = {};
+      // 평점이 null이 아닌 경우만 필터링
+      if (minRating || maxRating) {
+        where.rating.not = null;
+      }
       if (minRating) {
-        ratingFilter.gte = parseFloat(minRating);
+        where.rating.gte = parseFloat(minRating);
       }
       if (maxRating) {
-        ratingFilter.lte = parseFloat(maxRating);
+        where.rating.lte = parseFloat(maxRating);
       }
-      where.rating = ratingFilter;
     }
 
     // 최소 리뷰 수 필터
