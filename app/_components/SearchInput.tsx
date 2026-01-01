@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   getSearchHistory,
   addSearchHistory,
@@ -8,7 +9,6 @@ import {
   clearSearchHistory,
   type SearchHistoryItem,
 } from "@/lib/search-history";
-import { useRouter } from "next/navigation";
 
 interface SearchInputProps {
   value: string;
@@ -169,8 +169,60 @@ export default function SearchInput({ value, onChange, placeholder }: SearchInpu
         </svg>
       </div>
 
+      {/* 자동완성 제안 */}
+      {showSuggestions && (suggestions.length > 0 || loadingSuggestions) && (
+        <div className="absolute z-50 w-full mt-2 bg-white rounded-xl shadow-xl border-2 border-gray-100 overflow-hidden">
+          {loadingSuggestions ? (
+            <div className="p-4 text-center text-gray-500">
+              <div className="animate-spin rounded-full h-5 w-5 border-2 border-primary-600 border-t-transparent mx-auto"></div>
+              <p className="mt-2 text-sm">검색 중...</p>
+            </div>
+          ) : (
+            <div className="py-2">
+              <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide border-b border-gray-100">
+                검색 제안
+              </div>
+              {suggestions.map((suggestion) => (
+                <button
+                  key={`${suggestion.type}-${suggestion.id}`}
+                  type="button"
+                  onClick={() => handleSuggestionClick(suggestion)}
+                  className="w-full px-4 py-3 text-left hover:bg-primary-50 transition-colors border-b border-gray-50 last:border-b-0"
+                >
+                  <div className="flex items-start gap-3">
+                    <svg
+                      className="w-5 h-5 text-primary-600 mt-0.5 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                      />
+                    </svg>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-gray-900 truncate">
+                        {suggestion.text}
+                      </div>
+                      {suggestion.subtext && (
+                        <div className="text-sm text-gray-500 truncate mt-0.5">
+                          {suggestion.subtext}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* 검색 기록 드롭다운 */}
-      {showHistory && history.length > 0 && (
+      {showHistory && history.length > 0 && !showSuggestions && (
         <div className="absolute z-10 w-full mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-xl max-h-80 overflow-y-auto">
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
             <span className="text-sm font-semibold text-gray-700">최근 검색</span>
@@ -226,4 +278,3 @@ export default function SearchInput({ value, onChange, placeholder }: SearchInpu
     </div>
   );
 }
-
