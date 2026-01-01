@@ -257,25 +257,66 @@ export default function HomePage() {
 
             {/* 필터 */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* 진료과 필터 */}
+              {/* 진료과 필터 - 여러 선택 가능 */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2.5">
-                  진료과 선택
+                  진료과 선택 {selectedDepartmentIds.length > 0 && `(${selectedDepartmentIds.length}개 선택됨)`}
                 </label>
-                <select
-                  value={selectedDepartment || ""}
-                  onChange={(e) =>
-                    setSelectedDepartment(e.target.value ? Number(e.target.value) : null)
-                  }
-                  className="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 bg-white text-gray-900 font-medium"
-                >
-                  <option value="">전체 진료과</option>
-                  {departments.map((dept) => (
-                    <option key={dept.id} value={dept.id}>
-                      {dept.icon} {dept.name} ({dept.nameEn})
-                    </option>
-                  ))}
-                </select>
+                <div className="flex flex-wrap gap-2 p-3 border-2 border-gray-200 rounded-xl bg-white min-h-[48px]">
+                  {departments.length === 0 ? (
+                    <p className="text-sm text-gray-500">진료과 로딩 중...</p>
+                  ) : (
+                    <>
+                      {departments.slice(0, 8).map((dept) => (
+                        <button
+                          key={dept.id}
+                          type="button"
+                          onClick={() => toggleDepartment(dept.id)}
+                          className={`px-3 py-1.5 rounded-lg border-2 transition-all text-sm font-medium ${
+                            selectedDepartmentIds.includes(dept.id)
+                              ? "bg-primary-600 text-white border-primary-600 shadow-md"
+                              : "bg-white text-gray-700 border-gray-200 hover:border-primary-400 hover:bg-primary-50"
+                          }`}
+                        >
+                          <span className="mr-1.5">{dept.icon || "🏥"}</span>
+                          {dept.name}
+                        </button>
+                      ))}
+                      {departments.length > 8 && (
+                        <button
+                          type="button"
+                          onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                          className="px-3 py-1.5 rounded-lg border-2 border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 text-sm font-medium"
+                        >
+                          더보기...
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
+                {/* 선택된 진료과 표시 */}
+                {selectedDepartmentIds.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {selectedDepartmentIds.map(id => {
+                      const dept = departments.find(d => d.id === id);
+                      if (!dept) return null;
+                      return (
+                        <span
+                          key={id}
+                          className="inline-flex items-center px-2 py-1 bg-primary-100 text-primary-700 rounded-lg text-xs font-medium"
+                        >
+                          {dept.icon} {dept.name}
+                          <button
+                            onClick={() => toggleDepartment(id)}
+                            className="ml-1.5 hover:text-primary-900"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* 도시 필터 */}
@@ -313,7 +354,7 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
                 상세 필터
-                {(minRating > 0 || maxRating < 5 || minReviewCount > 0) && (
+                {(minRating > 0 || maxRating < 5 || minReviewCount > 0 || selectedDepartmentIds.length > 0) && (
                   <span className="bg-primary-600 text-white text-xs px-2 py-0.5 rounded-full">
                     활성
                   </span>
@@ -337,14 +378,22 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* 필터 프리셋 */}
+        <div className="mb-6">
+          <FilterPresets onApplyPreset={handleApplyPreset} />
+        </div>
+
         {/* 진료과 빠른 선택 */}
         {departments.length > 0 && (
           <div className="mb-10 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">인기 진료과</h2>
-              {selectedDepartment && (
+              {(selectedDepartment || selectedDepartmentIds.length > 0) && (
                 <button
-                  onClick={() => setSelectedDepartment(null)}
+                  onClick={() => {
+                    setSelectedDepartment(null);
+                    setSelectedDepartmentIds([]);
+                  }}
                   className="text-sm text-primary-600 hover:text-primary-700 font-medium transition-colors"
                 >
                   전체보기
@@ -355,13 +404,9 @@ export default function HomePage() {
               {departments.slice(0, 8).map((dept, index) => (
                 <button
                   key={dept.id}
-                  onClick={() =>
-                    setSelectedDepartment(
-                      selectedDepartment === dept.id ? null : dept.id
-                    )
-                  }
+                  onClick={() => toggleDepartment(dept.id)}
                   className={`px-5 py-3 rounded-full border-2 transition-all duration-300 font-semibold text-sm sm:text-base relative overflow-hidden group ${
-                    selectedDepartment === dept.id
+                    selectedDepartmentIds.includes(dept.id) || selectedDepartment === dept.id
                       ? "bg-gradient-to-r from-primary-600 to-primary-700 text-white border-primary-600 shadow-lg shadow-primary-200/50 scale-105"
                       : "bg-white text-gray-700 border-gray-200 hover:border-primary-400 hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-50/50 hover:text-primary-700 hover:shadow-md"
                   }`}
