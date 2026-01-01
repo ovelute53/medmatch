@@ -148,6 +148,7 @@ model User {
   favorites      HospitalFavorite[]
   reviewLikes    ReviewLike[]
   reviewComments ReviewComment[]
+  qnas           QnA[]
 
   @@index([email])
 }
@@ -213,4 +214,85 @@ model ReviewComment {
   @@index([userId])
   @@index([createdAt])
   @@index([isHospitalReply])
+}
+
+// 건강 정보 게시글
+model Article {
+  id          Int      @id @default(autoincrement())
+  title       String
+  titleEn     String?  // 영어 제목
+  content     String   // 본문 내용
+  contentEn   String?  // 영어 본문
+  summary     String?  // 요약
+  summaryEn   String?  // 영어 요약
+  category    String   @default("general") // "general", "disease", "treatment", "prevention"
+  imageUrl    String?  // 대표 이미지
+  author      String?  // 작성자 (관리자 또는 의료진)
+  viewCount   Int      @default(0) // 조회수
+  isPublished Boolean  @default(false) // 게시 여부
+  publishedAt DateTime? // 게시일
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tags ArticleTag[]
+
+  @@index([category])
+  @@index([isPublished])
+  @@index([publishedAt])
+  @@index([createdAt])
+}
+
+// 게시글 태그
+model ArticleTag {
+  id        Int      @id @default(autoincrement())
+  articleId Int
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       String   // 태그명 (예: "감기", "예방", "치료")
+  createdAt DateTime @default(now())
+
+  @@unique([articleId, tag])
+  @@index([tag])
+}
+
+// FAQ
+model FAQ {
+  id        Int      @id @default(autoincrement())
+  question  String   // 질문 (한국어)
+  questionEn String? // 질문 (영어)
+  answer    String   // 답변 (한국어)
+  answerEn  String?  // 답변 (영어)
+  category  String   @default("general") // "general", "reservation", "treatment", "payment"
+  order     Int      @default(0) // 정렬 순서
+  viewCount Int      @default(0) // 조회수
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([order])
+}
+
+// 실시간 Q&A
+model QnA {
+  id          Int      @id @default(autoincrement())
+  userId      Int?     // 질문자 ID (선택사항)
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  title       String   // 질문 제목
+  content     String   // 질문 내용
+  category    String   @default("general") // "general", "hospital", "treatment", "reservation"
+  status      String   @default("pending") // "pending", "answered", "closed"
+  viewCount   Int      @default(0) // 조회수
+  
+  // 답변 정보
+  answeredBy  String?  // 답변자 (관리자/의료진 이름)
+  answer      String?  // 답변 내용
+  answeredAt  DateTime? // 답변일
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([category])
+  @@index([createdAt])
 }

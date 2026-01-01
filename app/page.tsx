@@ -14,6 +14,7 @@ import Pagination from "./_components/Pagination";
 import SortSelector from "./_components/SortSelector";
 import AdvancedFilters from "./_components/AdvancedFilters";
 import FilterPresets from "./_components/FilterPresets";
+import MainNavigation from "./_components/MainNavigation";
 
 interface Department {
   id: number;
@@ -209,7 +210,10 @@ export default function HomePage() {
                 <p className="text-gray-600 text-xs sm:text-sm mt-0.5">외국인 환자 맞춤 병원 매칭 플랫폼</p>
               </div>
             </Link>
-            <UserMenu />
+            <div className="flex items-center gap-4">
+              <MainNavigation />
+              <UserMenu />
+            </div>
           </div>
         </div>
       </header>
