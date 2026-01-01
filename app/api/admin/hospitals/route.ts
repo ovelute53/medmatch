@@ -16,6 +16,17 @@ export async function POST(req: Request) {
       descriptionEn,
       imageUrl,
       departmentIds = [],
+      operatingHours,
+      operatingHoursEn,
+      hasParking = false,
+      parkingInfo,
+      parkingInfoEn,
+      isWheelchairAccessible = false,
+      supportedLanguages,
+      transportationInfo,
+      transportationInfoEn,
+      estimatedCost,
+      estimatedCostEn,
     } = body;
 
     if (!name || !address) {
@@ -37,6 +48,17 @@ export async function POST(req: Request) {
         description: description || null,
         descriptionEn: descriptionEn || null,
         imageUrl: imageUrl || null,
+        operatingHours: operatingHours || null,
+        operatingHoursEn: operatingHoursEn || null,
+        hasParking: Boolean(hasParking),
+        parkingInfo: parkingInfo || null,
+        parkingInfoEn: parkingInfoEn || null,
+        isWheelchairAccessible: Boolean(isWheelchairAccessible),
+        supportedLanguages: supportedLanguages || null,
+        transportationInfo: transportationInfo || null,
+        transportationInfoEn: transportationInfoEn || null,
+        estimatedCost: estimatedCost || null,
+        estimatedCostEn: estimatedCostEn || null,
         departments: {
           create: departmentIds.map((deptId: number) => ({
             departmentId: deptId,

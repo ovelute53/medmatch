@@ -5,6 +5,7 @@ import HospitalRequestForm from "./_components/HospitalRequestForm";
 import ReviewFormWrapper from "./_components/ReviewFormWrapper";
 import FavoriteButton from "./_components/FavoriteButton";
 import RecentHospitalTracker from "./_components/RecentHospitalTracker";
+import HospitalDetails from "../../_components/HospitalDetails";
 
 export const dynamic = "force-dynamic";
 
@@ -166,6 +167,36 @@ export default async function HospitalDetail({
                 </div>
               </div>
             )}
+
+            {/* 병원 상세 정보 */}
+            <HospitalDetails
+              operatingHours={hospital.operatingHours}
+              operatingHoursEn={hospital.operatingHoursEn}
+              hasParking={hospital.hasParking}
+              parkingInfo={hospital.parkingInfo}
+              parkingInfoEn={hospital.parkingInfoEn}
+              isWheelchairAccessible={hospital.isWheelchairAccessible}
+              supportedLanguages={hospital.supportedLanguages}
+              transportationInfo={hospital.transportationInfo}
+              transportationInfoEn={hospital.transportationInfoEn}
+              estimatedCost={hospital.estimatedCost}
+              estimatedCostEn={hospital.estimatedCostEn}
+            />
+
+            {/* 병원 상세 정보 */}
+            <HospitalDetails
+              operatingHours={hospital.operatingHours}
+              operatingHoursEn={hospital.operatingHoursEn}
+              hasParking={hospital.hasParking}
+              parkingInfo={hospital.parkingInfo}
+              parkingInfoEn={hospital.parkingInfoEn}
+              isWheelchairAccessible={hospital.isWheelchairAccessible}
+              supportedLanguages={hospital.supportedLanguages}
+              transportationInfo={hospital.transportationInfo}
+              transportationInfoEn={hospital.transportationInfoEn}
+              estimatedCost={hospital.estimatedCost}
+              estimatedCostEn={hospital.estimatedCostEn}
+            />
 
             {/* 병원 설명 */}
             {(hospital.description || hospital.descriptionEn) && (

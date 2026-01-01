@@ -22,6 +22,17 @@ type FormState = {
   descriptionEn: string;
   imageUrl: string;
   departmentIds: number[];
+  operatingHours: string;
+  operatingHoursEn: string;
+  hasParking: boolean;
+  parkingInfo: string;
+  parkingInfoEn: string;
+  isWheelchairAccessible: boolean;
+  supportedLanguages: string;
+  transportationInfo: string;
+  transportationInfoEn: string;
+  estimatedCost: string;
+  estimatedCostEn: string;
 };
 
 const initialState: FormState = {
@@ -36,6 +47,17 @@ const initialState: FormState = {
   descriptionEn: "",
   imageUrl: "",
   departmentIds: [],
+  operatingHours: "",
+  operatingHoursEn: "",
+  hasParking: false,
+  parkingInfo: "",
+  parkingInfoEn: "",
+  isWheelchairAccessible: false,
+  supportedLanguages: "",
+  transportationInfo: "",
+  transportationInfoEn: "",
+  estimatedCost: "",
+  estimatedCostEn: "",
 };
 
 export default function NewHospitalPage() {
@@ -274,6 +296,143 @@ export default function NewHospitalPage() {
                 rows={4}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+
+            <div className="border-t border-gray-200 pt-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">병원 상세 정보</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    운영 시간 (한국어)
+                  </label>
+                  <input
+                    value={form.operatingHours}
+                    onChange={(e) => onChange("operatingHours", e.target.value)}
+                    placeholder="예: 월-금: 09:00-18:00"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    운영 시간 (영어)
+                  </label>
+                  <input
+                    value={form.operatingHoursEn}
+                    onChange={(e) => onChange("operatingHoursEn", e.target.value)}
+                    placeholder="예: Mon-Fri: 09:00-18:00"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    주차 정보 (한국어)
+                  </label>
+                  <input
+                    value={form.parkingInfo}
+                    onChange={(e) => onChange("parkingInfo", e.target.value)}
+                    placeholder="예: 지하 주차장, 2시간 무료"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    주차 정보 (영어)
+                  </label>
+                  <input
+                    value={form.parkingInfoEn}
+                    onChange={(e) => onChange("parkingInfoEn", e.target.value)}
+                    placeholder="예: Underground parking, 2 hours free"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    교통편 안내 (한국어)
+                  </label>
+                  <input
+                    value={form.transportationInfo}
+                    onChange={(e) => onChange("transportationInfo", e.target.value)}
+                    placeholder="예: 지하철 2호선 강남역 3번 출구"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    교통편 안내 (영어)
+                  </label>
+                  <input
+                    value={form.transportationInfoEn}
+                    onChange={(e) => onChange("transportationInfoEn", e.target.value)}
+                    placeholder="예: Subway Line 2, Gangnam Station Exit 3"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    예상 진료비 (한국어)
+                  </label>
+                  <input
+                    value={form.estimatedCost}
+                    onChange={(e) => onChange("estimatedCost", e.target.value)}
+                    placeholder="예: 초진: 50,000원"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    예상 진료비 (영어)
+                  </label>
+                  <input
+                    value={form.estimatedCostEn}
+                    onChange={(e) => onChange("estimatedCostEn", e.target.value)}
+                    placeholder="예: First visit: 50,000 KRW"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    지원 언어
+                  </label>
+                  <input
+                    value={form.supportedLanguages}
+                    onChange={(e) => onChange("supportedLanguages", e.target.value)}
+                    placeholder="예: 한국어,영어,중국어,일본어"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">쉼표로 구분하여 입력하세요</p>
+                </div>
+              </div>
+
+              <div className="mt-4 flex gap-6">
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.hasParking}
+                    onChange={(e) => onChange("hasParking", e.target.checked)}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">주차 가능</span>
+                </label>
+
+                <label className="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.isWheelchairAccessible}
+                    onChange={(e) => onChange("isWheelchairAccessible", e.target.checked)}
+                    className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">휠체어 접근 가능</span>
+                </label>
+              </div>
             </div>
 
             <div className="flex gap-4">

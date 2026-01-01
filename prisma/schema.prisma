@@ -20,6 +20,17 @@ model Hospital {
   imageUrl      String? // 병원 이미지 URL
   rating        Float?   @default(0) // 평점 (0-5)
   reviewCount   Int      @default(0) // 리뷰 수
+  operatingHours String? // 운영 시간 (예: "월-금: 09:00-18:00")
+  operatingHoursEn String? // 운영 시간 (영어)
+  hasParking    Boolean  @default(false) // 주차 가능 여부
+  parkingInfo   String? // 주차 정보 (예: "지하 주차장, 2시간 무료")
+  parkingInfoEn String? // 주차 정보 (영어)
+  isWheelchairAccessible Boolean @default(false) // 휠체어 접근 가능 여부
+  supportedLanguages String? // 지원 언어 (쉼표로 구분, 예: "한국어,영어,중국어,일본어")
+  transportationInfo String? // 교통편 안내 (예: "지하철 2호선 강남역 3번 출구")
+  transportationInfoEn String? // 교통편 안내 (영어)
+  estimatedCost String? // 예상 진료비 (예: "초진: 50,000원")
+  estimatedCostEn String? // 예상 진료비 (영어)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
