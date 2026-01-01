@@ -1,0 +1,39 @@
+# Git Flow 설정 정보
+# 이 파일은 Git Flow 브랜치 구조를 설명합니다
+
+브랜치 구조:
+- main: 프로덕션 브랜치 (안정적인 릴리스)
+- develop: 개발 브랜치 (기능 개발의 기본)
+- feature/*: 기능 개발 브랜치 (develop에서 분기)
+- release/*: 릴리스 준비 브랜치 (develop에서 분기, main으로 병합)
+- hotfix/*: 긴급 수정 브랜치 (main에서 분기, main과 develop으로 병합)
+
+작업 흐름:
+1. 기능 개발: develop에서 feature 브랜치 생성
+   git checkout develop
+   git checkout -b feature/기능명
+   # 작업 및 커밋
+   git checkout develop
+   git merge feature/기능명
+   git branch -d feature/기능명
+
+2. 릴리스 준비: develop에서 release 브랜치 생성
+   git checkout develop
+   git checkout -b release/버전번호
+   # 버그 수정 및 버전 업데이트
+   git checkout main
+   git merge release/버전번호
+   git checkout develop
+   git merge release/버전번호
+   git branch -d release/버전번호
+
+3. 긴급 수정: main에서 hotfix 브랜치 생성
+   git checkout main
+   git checkout -b hotfix/버전번호
+   # 긴급 수정
+   git checkout main
+   git merge hotfix/버전번호
+   git checkout develop
+   git merge hotfix/버전번호
+   git branch -d hotfix/버전번호
+
