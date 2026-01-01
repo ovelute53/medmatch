@@ -406,7 +406,7 @@ export default function HomePage() {
                   key={dept.id}
                   onClick={() => toggleDepartment(dept.id)}
                   className={`px-5 py-3 rounded-full border-2 transition-all duration-300 font-semibold text-sm sm:text-base relative overflow-hidden group ${
-                    selectedDepartmentIds.includes(dept.id) || selectedDepartment === dept.id
+                    selectedDepartmentIds.includes(dept.id)
                       ? "bg-gradient-to-r from-primary-600 to-primary-700 text-white border-primary-600 shadow-lg shadow-primary-200/50 scale-105"
                       : "bg-white text-gray-700 border-gray-200 hover:border-primary-400 hover:bg-gradient-to-r hover:from-primary-50 hover:to-primary-50/50 hover:text-primary-700 hover:shadow-md"
                   }`}
@@ -416,7 +416,7 @@ export default function HomePage() {
                     <span className="mr-2 text-lg">{dept.icon || "🏥"}</span>
                     {dept.name}
                   </span>
-                  {selectedDepartment === dept.id && (
+                  {selectedDepartmentIds.includes(dept.id) && (
                     <div className="absolute inset-0 bg-gradient-to-r from-primary-400/20 to-transparent animate-shimmer"></div>
                   )}
                 </button>
