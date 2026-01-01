@@ -50,49 +50,61 @@ export default function Pagination({
   };
 
   return (
-    <div className="flex items-center justify-center space-x-2 mt-6">
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
-      >
-        이전
-      </button>
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <div className="flex items-center space-x-2">
+        <button
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border-2 border-gray-200 rounded-xl hover:border-primary-400 hover:bg-primary-50 hover:text-primary-700 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+        >
+          <span className="flex items-center">
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            이전
+          </span>
+        </button>
 
-      <div className="flex items-center space-x-1">
-        {getPageNumbers().map((page, index) => {
-          if (page === "...") {
+        <div className="flex items-center space-x-1">
+          {getPageNumbers().map((page, index) => {
+            if (page === "...") {
+              return (
+                <span key={`ellipsis-${index}`} className="px-3 py-2 text-gray-500">
+                  ...
+                </span>
+              );
+            }
+
+            const pageNum = page as number;
             return (
-              <span key={`ellipsis-${index}`} className="px-2 text-gray-500">
-                ...
-              </span>
+              <button
+                key={pageNum}
+                onClick={() => onPageChange(pageNum)}
+                className={`px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-200 ${
+                  currentPage === pageNum
+                    ? "bg-gradient-to-r from-primary-600 to-primary-700 text-white shadow-lg shadow-primary-200/50 scale-105"
+                    : "bg-white text-gray-700 border-2 border-gray-200 hover:border-primary-400 hover:bg-primary-50 hover:text-primary-700 shadow-sm hover:shadow-md"
+                }`}
+              >
+                {pageNum}
+              </button>
             );
-          }
+          })}
+        </div>
 
-          const pageNum = page as number;
-          return (
-            <button
-              key={pageNum}
-              onClick={() => onPageChange(pageNum)}
-              className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                currentPage === pageNum
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-              }`}
-            >
-              {pageNum}
-            </button>
-          );
-        })}
+        <button
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 text-sm font-semibold text-gray-700 bg-white border-2 border-gray-200 rounded-xl hover:border-primary-400 hover:bg-primary-50 hover:text-primary-700 disabled:bg-gray-100 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed transition-all duration-200 shadow-sm hover:shadow-md"
+        >
+          <span className="flex items-center">
+            다음
+            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </button>
       </div>
-
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
-      >
-        다음
-      </button>
     </div>
   );
 }

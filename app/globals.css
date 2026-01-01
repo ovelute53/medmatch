@@ -2,19 +2,50 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-  /* SeoulGigibae Burgundy Theme Colors */
-  --burgundy-50: #fef2f2;
-  --burgundy-100: #fee2e2;
-  --burgundy-200: #fecaca;
-  --burgundy-300: #fca5a5;
-  --burgundy-400: #f87171;
-  --burgundy-500: #ef4444;
-  --burgundy-600: #dc2626;
-  --burgundy-700: #9f1239;
-  --burgundy-800: #881337;
-  --burgundy-900: #711432;
-  --burgundy-950: #4c0519;
+  --foreground: #1a1a1a;
+  
+  /* 강남언니 스타일 컬러 시스템 */
+  --primary-50: #f0f4ff;
+  --primary-100: #e0e9ff;
+  --primary-200: #c7d8ff;
+  --primary-300: #a5bfff;
+  --primary-400: #7c9cff;
+  --primary-500: #5b7fff;
+  --primary-600: #3d5eff;
+  --primary-700: #2d47e5;
+  --primary-800: #2838b8;
+  --primary-900: #293791;
+  
+  /* 중성 색상 */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  
+  /* 액센트 색상 */
+  --accent-pink: #ff6b9d;
+  --accent-purple: #a855f7;
+  --accent-orange: #ff8c42;
+  
+  /* 그림자 */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+  /* 둥근 모서리 */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
 }
 
 @theme inline {
@@ -23,34 +54,311 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   
-  /* SeoulGigibae Burgundy Colors */
-  --color-burgundy-50: var(--burgundy-50);
-  --color-burgundy-100: var(--burgundy-100);
-  --color-burgundy-200: var(--burgundy-200);
-  --color-burgundy-300: var(--burgundy-300);
-  --color-burgundy-400: var(--burgundy-400);
-  --color-burgundy-500: var(--burgundy-500);
-  --color-burgundy-600: var(--burgundy-600);
-  --color-burgundy-700: var(--burgundy-700);
-  --color-burgundy-800: var(--burgundy-800);
-  --color-burgundy-900: var(--burgundy-900);
-  --color-burgundy-950: var(--burgundy-950);
+  /* Primary colors */
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
   
-  /* Primary color set to burgundy */
-  --color-primary: var(--burgundy-700);
-  --color-primary-hover: var(--burgundy-800);
-  --color-primary-light: var(--burgundy-600);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Primary alias for backward compatibility */
+  --color-primary: var(--primary-600);
+  --color-primary-hover: var(--primary-700);
+  --color-primary-light: var(--primary-500);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* 강남언니 스타일 유틸리티 클래스 */
+.card {
+  background: white;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-2px);
+}
+
+.search-input {
+  background: white;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px var(--primary-100);
+}
+
+.button-primary {
+  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.button-primary:hover {
+  background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-800) 100%);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.button-primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+.button-secondary {
+  background: white;
+  color: var(--gray-700);
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.button-secondary:hover {
+  border-color: var(--primary-500);
+  color: var(--primary-600);
+  background: var(--primary-50);
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--primary-200);
+}
+
+/* 부드러운 스크롤 */
+* {
+  scroll-behavior: smooth;
+}
+
+/* 선택 영역 스타일 */
+::selection {
+  background: var(--primary-200);
+  color: var(--primary-900);
+}
+
+/* 포커스 링 스타일 */
+*:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* 최신 애니메이션 효과 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s ease-out;
+}
+
+/* Glassmorphism 효과 */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 현대적인 카드 효과 */
+.card-modern {
+  background: white;
+  border-radius: var(--radius-2xl);
+  box-shadow: 
+    0 1px 3px 0 rgba(0, 0, 0, 0.05),
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-modern:hover {
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
+  border-color: rgba(61, 94, 255, 0.2);
+}
+
+/* 그라데이션 텍스트 */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 50%, var(--accent-purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* 부드러운 그라데이션 배경 */
+.gradient-bg {
+  background: linear-gradient(135deg, 
+    rgba(240, 244, 255, 0.8) 0%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(240, 244, 255, 0.6) 100%
+  );
+}
+
+/* 인터랙티브 버튼 효과 */
+.btn-interactive {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-interactive::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn-interactive:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* 스크롤 시 나타나는 효과 */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 현대적인 입력 필드 */
+.input-modern {
+  background: white;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-xl);
+  padding: 0.875rem 1.25rem;
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.input-modern:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 
+    0 0 0 4px rgba(61, 94, 255, 0.1),
+    0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* 부드러운 그림자 */
+.shadow-soft {
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-soft-lg {
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.08);
 }

@@ -7,6 +7,10 @@ export async function GET(req: Request) {
     const departmentId = searchParams.get("departmentId");
     const city = searchParams.get("city");
     const search = searchParams.get("search");
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "12");
+    const sortBy = searchParams.get("sortBy") || "rating"; // rating, reviewCount, name, createdAt
+    const sortOrder = searchParams.get("sortOrder") || "desc"; // asc, desc
 
     const where: any = {};
 
@@ -23,8 +27,6 @@ export async function GET(req: Request) {
     }
 
     if (search) {
-      // SQLite는 대소문자 구분 없이 검색 (LIKE 사용)
-      const searchLower = search.toLowerCase();
       where.OR = [
         { name: { contains: search } },
         { nameEn: { contains: search } },
@@ -34,6 +36,42 @@ export async function GET(req: Request) {
       ];
     }
 
+    // 정렬 옵션 (Prisma는 배열을 요구합니다)
+    let orderBy: any[] = [];
+    switch (sortBy) {
+      case "rating":
+        orderBy = [
+          { rating: sortOrder },
+          { reviewCount: "desc" }, // 평점이 같으면 리뷰 수로
+        ];
+        break;
+      case "reviewCount":
+        orderBy = [
+          { reviewCount: sortOrder },
+          { rating: "desc" }, // 리뷰 수가 같으면 평점으로
+        ];
+        break;
+      case "name":
+        orderBy = [{ name: sortOrder }];
+        break;
+      case "createdAt":
+        orderBy = [{ createdAt: sortOrder }];
+        break;
+      default:
+        orderBy = [
+          { rating: "desc" },
+          { reviewCount: "desc" },
+        ];
+    }
+
+    // 전체 개수 조회
+    const totalCount = await prisma.hospital.count({ where });
+
+    // 페이지네이션 계산
+    const skip = (page - 1) * limit;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    // 병원 데이터 조회
     const hospitals = await prisma.hospital.findMany({
       where,
       include: {
@@ -43,14 +81,22 @@ export async function GET(req: Request) {
           },
         },
       },
-      orderBy: [
-        { rating: "desc" },
-        { reviewCount: "desc" },
-        { createdAt: "desc" },
-      ],
+      orderBy,
+      skip,
+      take: limit,
     });
 
-    return NextResponse.json({ hospitals });
+    return NextResponse.json({
+      hospitals,
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },
+    });
   } catch (error: any) {
     console.error("병원 조회 오류:", error);
     return NextResponse.json(
