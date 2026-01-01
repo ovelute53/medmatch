@@ -108,6 +108,21 @@ export default async function AdminPage() {
           </Link>
 
           <Link
+            href="/admin/articles"
+            className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  건강 정보 관리
+                </h2>
+                <p className="text-gray-600">건강 정보 게시글을 관리합니다.</p>
+              </div>
+              <span className="text-4xl">📄</span>
+            </div>
+          </Link>
+
+          <Link
             href="/admin/requests"
             className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
           >
