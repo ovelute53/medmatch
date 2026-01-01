@@ -491,6 +491,14 @@ export default function HomePage() {
                           src={hospital.imageUrl}
                           alt={hospital.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = '<div class="h-48 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center"><span class="text-6xl">🏥</span></div>';
+                            }
+                          }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </div>
