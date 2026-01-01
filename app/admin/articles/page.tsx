@@ -428,7 +428,7 @@ export default function AdminArticlesPage() {
                 </div>
               </div>
 
-              <div>
+              <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
@@ -445,8 +445,24 @@ export default function AdminArticlesPage() {
                   type="submit"
                   className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-semibold"
                 >
-                  {editingId ? "수정" : "생성"}
+                  {editingId ? "수정" : formData.isPublished ? "게시하기" : "임시저장"}
                 </button>
+                {!formData.isPublished && (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setFormData({ ...formData, isPublished: true });
+                      const form = e.currentTarget.closest('form');
+                      if (form) {
+                        form.requestSubmit();
+                      }
+                    }}
+                    className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold"
+                  >
+                    바로 게시하기
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={handleCancel}
