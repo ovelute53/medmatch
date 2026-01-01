@@ -60,8 +60,8 @@ export async function POST(
     }
 
     const authResult = await requireOwnerOrAdmin(userId);
-    if (!authResult.authorized) {
-      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
+    if (!authResult.authorized && authResult.response) {
+      return authResult.response;
     }
 
     const body = await req.json();
