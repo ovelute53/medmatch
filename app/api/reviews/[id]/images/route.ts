@@ -45,6 +45,11 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const authResult = await requireAuth();
+    if (!authResult.authorized && authResult.response) {
+      return authResult.response;
+    }
+
     const { id } = await params;
     const reviewId = Number(id);
 
@@ -65,7 +70,7 @@ export async function POST(
       );
     }
 
-    // 리뷰 존재 확인
+    // 리뷰 존재 및 소유권 확인
     const review = await prisma.review.findUnique({
       where: { id: reviewId },
     });
@@ -74,6 +79,18 @@ export async function POST(
       return NextResponse.json(
         { error: "리뷰를 찾을 수 없습니다." },
         { status: 404 }
+      );
+    }
+
+    // 본인 또는 관리자만 이미지 추가 가능
+    const authUserId = typeof authResult.user.id === 'string' ? Number(authResult.user.id) : authResult.user.id;
+    const isOwner = review.userId === authUserId;
+    const isAdmin = authResult.user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
+      return NextResponse.json(
+        { error: "본인 또는 관리자만 이미지를 추가할 수 있습니다." },
+        { status: 403 }
       );
     }
 
@@ -120,6 +137,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const authResult = await requireAuth();
+    if (!authResult.authorized && authResult.response) {
+      return authResult.response;
+    }
+
     const { id } = await params;
     const reviewId = Number(id);
     const { searchParams } = new URL(req.url);
@@ -142,6 +164,18 @@ export async function DELETE(
       return NextResponse.json(
         { error: "이미지를 찾을 수 없습니다." },
         { status: 404 }
+      );
+    }
+
+    // 본인 또는 관리자만 삭제 가능
+    const authUserId = typeof authResult.user.id === 'string' ? Number(authResult.user.id) : authResult.user.id;
+    const isOwner = image.review.userId === authUserId;
+    const isAdmin = authResult.user.role === "admin";
+
+    if (!isOwner && !isAdmin) {
+      return NextResponse.json(
+        { error: "본인 또는 관리자만 이미지를 삭제할 수 있습니다." },
+        { status: 403 }
       );
     }
 
